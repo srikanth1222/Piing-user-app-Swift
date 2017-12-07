@@ -10,17 +10,19 @@ import UIKit
 import Alamofire
 
 
-class SelectPickupDatesViewController: UIViewController {
-
+class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var tableViewDates: UITableView!
     @IBOutlet weak var tableViewTimeslots: UITableView!
+    
+    var pickupDates = ResponseModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         
-        let dictPrams = ["uid" : "20316", "t" : "ttndot8lum", "pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        let dictPrams = ["uid" : "20316", "t" : "wun1aeu2ek", "pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
         
         let URLString = WebServices.BASE_URL+WebServices.GET_PICKUP_DATES_AND_TIMESLOTS
         
@@ -28,12 +30,57 @@ class SelectPickupDatesViewController: UIViewController {
             
             guard let responseObject = responseObject else { return }
             
-            //print (responseObject)
+            print (responseObject)
+            
+            guard let data = data else { return }
+            
+            do {
+                
+                self.pickupDates = try JSONDecoder().decode(ResponseModel.self, from: data)
+                
+                //print(self.pickupDates)
+            }
+            catch let jsonDecodeErr {
+                
+                print(jsonDecodeErr)
+            }
             
             
             
         })
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if tableView == tableViewDates {
+            return (self.pickupDates.dates?.count)!
+        }
+        
+        else if tableView == tableViewTimeslots {
+            
+            guard let slots = self.pickupDates.dates else { return 0 }
+            return slots.count
+        }
+        else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cellId = "PICKUP_CELL"
+        var cell = tableView.dequeueReusableCell(withIdentifier: cellId)
+        
+        if cell == nil {
+            
+            cell = UITableViewCell.init(style: .value1, reuseIdentifier: cellId)
+            
+        }
+        
+        return cell!
+    }
+    
+    
     
     @IBAction func cancelButtonPressed(_ sender: Any) {
         

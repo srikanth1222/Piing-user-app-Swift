@@ -14,6 +14,7 @@
 		E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DC1FD1A30B0056058F /* AppColors.swift */; };
 		E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */; };
 		E64D30151F5FEE3300F7734D /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = E64D30141F5FEE3300F7734D /* style.json */; };
+		E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6746EED1FD93CE00030815B /* DateModel.swift */; };
 		E69FDEB71FD164DA00C171EC /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */; };
 		E69FDEB81FD164DA00C171EC /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA81FD164C900C171EC /* Lato-Black.ttf */; };
 		E69FDEB91FD164DA00C171EC /* Lato-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA91FD164CA00C171EC /* Lato-Heavy.ttf */; };
@@ -36,6 +37,7 @@
 		E6B3543B1F5E94E500C6B6FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6B3543A1F5E94E500C6B6FD /* Assets.xcassets */; };
 		E6B3543E1F5E94E500C6B6FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6B3543C1F5E94E500C6B6FD /* LaunchScreen.storyboard */; };
 		E6B4558B1FD6861900ADC263 /* WebServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B4558A1FD6861900ADC263 /* WebServices.swift */; };
+		E6EC75461FD944B200D65116 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC75451FD944B200D65116 /* ResponseModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,7 @@
 		E61364DC1FD1A30B0056058F /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+CenterImageAndTitle.swift"; sourceTree = "<group>"; };
 		E64D30141F5FEE3300F7734D /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
+		E6746EED1FD93CE00030815B /* DateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
 		E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		E69FDEA81FD164C900C171EC /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
 		E69FDEA91FD164CA00C171EC /* Lato-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Heavy.ttf"; sourceTree = "<group>"; };
@@ -73,6 +76,7 @@
 		E6B3543F1F5E94E500C6B6FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6B354451F5E9A9200C6B6FD /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E6B4558A1FD6861900ADC263 /* WebServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServices.swift; sourceTree = "<group>"; };
+		E6EC75451FD944B200D65116 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +158,8 @@
 				E6B4558A1FD6861900ADC263 /* WebServices.swift */,
 				E6B354331F5E94E500C6B6FD /* AppDelegate.swift */,
 				E6B354351F5E94E500C6B6FD /* MapViewController.swift */,
+				E6EC75451FD944B200D65116 /* ResponseModel.swift */,
+				E6746EED1FD93CE00030815B /* DateModel.swift */,
 				E60E99321FD56B58006F1A0F /* SelectPickupDatesViewController.swift */,
 				E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */,
 				E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */,
@@ -324,8 +330,10 @@
 				E6B354361F5E94E500C6B6FD /* MapViewController.swift in Sources */,
 				E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */,
 				E60E99331FD56B58006F1A0F /* SelectPickupDatesViewController.swift in Sources */,
+				E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */,
 				E60E99351FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift in Sources */,
 				E6B4558B1FD6861900ADC263 /* WebServices.swift in Sources */,
+				E6EC75461FD944B200D65116 /* ResponseModel.swift in Sources */,
 				E6B354341F5E94E500C6B6FD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
