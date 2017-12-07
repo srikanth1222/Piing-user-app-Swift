@@ -71,17 +71,12 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var lblPickupDateAndTime: UILabel!
     @IBOutlet weak var dateTimeView: UIView!
     
-    
-    var appDelegate: AppDelegate!
-    
     var greenDCTSTackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
+                
         //let camera = GMSCameraPosition.camera(withLatitude: 1.307924, longitude: 103.840963, zoom: 14.0)
         let camera = GMSCameraPosition.camera(withLatitude: 1.307924, longitude: 103.840963, zoom: 14.0, bearing: 270, viewingAngle: 0)
         
@@ -178,7 +173,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
             
             let lblTitle = UILabel(frame: CGRect(x: (view.frame.size.width * 0.65) * CGFloat(count), y: 0, width: (view.frame.size.width * 0.65), height: scrollViewServicesTitle.frame.size.height))
             
-            let attrKeyTitle = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-2)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+            let attrKeyTitle = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-2)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
             let attrTitle = NSMutableAttributedString(string: title, attributes: attrKeyTitle)
             
             lblTitle.attributedText = attrTitle
@@ -212,8 +207,8 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         let strPickupTime = "\nNEXT PICKUP 3 - 4 PM"
         
         
-        let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT)!]
-        let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-5)!]
+        let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!]
+        let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!]
         
         let attrPickupDate = NSMutableAttributedString(string: strPickupDate, attributes: attrKeyPickupDate)
         let attrPickupTime = NSMutableAttributedString(string: strPickupTime, attributes: attrKeyPickupTime)
@@ -240,15 +235,15 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
             let strIsHome = " @ HOME"
             let strLaneAddr = "403 Havelock Rd Singapore 229491"
             
-            let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+            let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
             
-            let attrKeySeparator = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-6)!]
+            let attrKeySeparator = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!]
             
-            let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+            let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
             
-            let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-6)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+            let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
             
-            let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: appDelegate.GLOBAL_CUSTOM_FONT-6)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
+            let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
             
             let attrPickupAddrText = NSMutableAttributedString(string: strPickupAddrText, attributes: attrKeyPickupAddrText)
             let attrSeparator = NSMutableAttributedString(string: strSeparator, attributes: attrKeySeparator)
@@ -279,15 +274,15 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
             let strIsHome = " @ WORK"
             let strLaneAddr = "403 Havelock Rd Singapore 229491"
             
-            let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: appDelegate.GLOBAL_CUSTOM_FONT-3), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+            let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: AppDelegate.GLOBAL_FONT_SIZE-3), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
             
 //            let attrKeySeparator = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont.systemFont(ofSize: 12.5)]
 //
 //            let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 15), NSAttributedStringKey.kern: NSNumber(value: 0.8)]
             
-            let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: appDelegate.GLOBAL_CUSTOM_FONT-4), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+            let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: AppDelegate.GLOBAL_FONT_SIZE-4), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
             
-            let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: appDelegate.GLOBAL_CUSTOM_FONT-4), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+            let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: AppDelegate.GLOBAL_FONT_SIZE-4), NSAttributedStringKey.kern: NSNumber(value: 0.7)]
             
             let attrPickupAddrText = NSMutableAttributedString(string: strPickupAddrText, attributes: attrKeyPickupAddrText)
 //            let attrSeparator = NSMutableAttributedString(string: strSeparator, attributes: attrKeySeparator)
@@ -327,55 +322,55 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         carpetBtn.imageView!.contentMode = .scaleAspectFit
         
         
-        let attrKeyLoadwash = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyLoadwash = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrLoadwash = NSAttributedString(string: "LOAD WASH", attributes: attrKeyLoadwash)
         
         lblLoadWash.attributedText = attrLoadwash
         lblLoadWash.minimumScaleFactor = 0.5
         
-        let attrKeyDC = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyDC = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrDC = NSAttributedString(string: "DRY CLEANING", attributes: attrKeyDC)
         
         lblDryCleaning.attributedText = attrDC
         lblDryCleaning.minimumScaleFactor = 0.5
         
-        let attrKeyWashiron = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyWashiron = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrWashiron = NSAttributedString(string: "WASH & IRON", attributes: attrKeyWashiron)
         
         lblWashIron.attributedText = attrWashiron
         lblWashIron.minimumScaleFactor = 0.5
         
-        let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrIroning = NSAttributedString(string: "IRONING", attributes: attrKeyIroning)
         
         lblIroning.attributedText = attrIroning
         lblIroning.minimumScaleFactor = 0.5
         
-        let attrKeyBags = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyBags = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrBags = NSAttributedString(string: "BAGS", attributes: attrKeyBags)
         
         lblBags.attributedText = attrBags
         lblBags.minimumScaleFactor = 0.5
         
-        let attrKeyShoes = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyShoes = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrShoes = NSAttributedString(string: "SHOES", attributes: attrKeyShoes)
         
         lblShoes.attributedText = attrShoes
         lblShoes.minimumScaleFactor = 0.5
         
-        let attrKeyLeather = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyLeather = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrLeather = NSAttributedString(string: "LEATHER", attributes: attrKeyLeather)
         
         lblLeather.attributedText = attrLeather
         lblLeather.minimumScaleFactor = 0.5
         
-        let attrKeyCurtain = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyCurtain = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrCurtain = NSAttributedString(string: "CURTAINS", attributes: attrKeyCurtain)
         
         lblCurtain.attributedText = attrCurtain
         lblCurtain.minimumScaleFactor = 0.5
         
-        let attrKeyCarpet = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyCarpet = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrCarpet = NSAttributedString(string: "CARPET", attributes: attrKeyCarpet)
         
         lblCarpet.attributedText = attrCarpet
@@ -424,7 +419,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
                 btnGreenDC.imageView!.contentMode = .scaleAspectFit
                 
                 let lblGreenDC = UILabel()
-                let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: appDelegate.GLOBAL_CUSTOM_FONT-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+                let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
                 let attrIroning = NSAttributedString(string: "Green DryCleaning".uppercased(), attributes: attrKeyIroning)
                 
                 lblGreenDC.attributedText = attrIroning
@@ -501,7 +496,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
 
 extension NSLayoutConstraint {
     func constraintWithMultiplier(_ multiplier: CGFloat) -> NSLayoutConstraint {
-        return NSLayoutConstraint(item: self.firstItem, attribute: self.firstAttribute, relatedBy: self.relation, toItem: self.secondItem, attribute: self.secondAttribute, multiplier: multiplier, constant: self.constant)
+        return NSLayoutConstraint(item: self.firstItem as Any, attribute: self.firstAttribute, relatedBy: self.relation, toItem: self.secondItem, attribute: self.secondAttribute, multiplier: multiplier, constant: self.constant)
     }
 }
 

@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    var GLOBAL_CUSTOM_FONT: CGFloat {
+    public static var GLOBAL_FONT_SIZE: CGFloat {
         
         get {
             
