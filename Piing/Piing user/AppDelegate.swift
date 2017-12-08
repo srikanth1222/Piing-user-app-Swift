@@ -55,6 +55,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    public static let constantDictValues = ["uid" : "20316", "t" : "i28vw6uoel"]
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         

@@ -12,8 +12,13 @@ import Alamofire
 
 class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var centerView: UIView!
     @IBOutlet weak var tableViewDates: UITableView!
     @IBOutlet weak var tableViewTimeslots: UITableView!
+    
+    @IBOutlet weak var bottomDeliveryDateView: UIView!
+    @IBOutlet weak var lblDelivery: UILabel!
+    @IBOutlet weak var imageViewArrow: UIImageView!
     
     var selectedDateRow:Int = 0
     
@@ -24,12 +29,32 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         
         // Do any additional setup after loading the view.
         
-        tableViewDates.backgroundColor = AppColors.RGBColor(r: 238, g: 239, b: 243, a: 1.0)
+        // Intialize Tap Gesture for bottom date and time slot View
+        let tapBottomDatesGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnBottomDatesView))
+        bottomDeliveryDateView.addGestureRecognizer(tapBottomDatesGesture)
+        
+        
+        let attrKeyDelivery = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-4)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        let attrDelivery = NSAttributedString(string: "DELIVERY DATE : TIME", attributes: attrKeyDelivery)
+        
+        lblDelivery.attributedText = attrDelivery
+        lblDelivery.minimumScaleFactor = 0.5
+        
+        let image = UIImage.init(named: "right_icon")?.imageWithInsets(insetDimen: imageViewArrow.frame.size.width * 0.5)
+        imageViewArrow.image = image
+        
+        centerView.backgroundColor =  AppColors.RGBColor(r: 238, g: 239, b: 243, a: 1.0)
+        tableViewDates.backgroundColor = .clear
         tableViewDates.separatorStyle = .none
         
+        tableViewTimeslots.backgroundColor = .white
         tableViewTimeslots.separatorStyle = .none
         
-        let dictPrams = ["uid" : "20316", "t" : "wun1aeu2ek", "pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        var dictPrams = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        
+        for(key, value) in AppDelegate.constantDictValues {
+            dictPrams[key] = value
+        }
         
         let URLString = WebServices.BASE_URL+WebServices.GET_PICKUP_DATES_AND_TIMESLOTS
         
@@ -58,6 +83,28 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 
                 self.tableViewDates.reloadData()
                 self.tableViewTimeslots.reloadData()
+                
+                guard let dates = self.pickupDates.dates else { return }
+                
+                let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
+                
+                let customHeightDate = min(self.centerView.frame.size.height, heightDate)
+                
+                self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
+                
+                
+                
+                guard let slots = dates[self.selectedDateRow].slots else { return }
+                
+                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                
+                let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                
+                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                
+                
+                let indexPath = IndexPath(row: 0, section: 0)
+                self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
             catch let jsonDecodeErr {
                 
@@ -66,15 +113,24 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         })
     }
     
+    @objc func tapOnBottomDatesView() {
+        
+        print("Tapped on Bottom Delivery date View")
+        
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == tableViewDates {
             
-            return (self.pickupDates.dates?.count)!
+            guard let dates = self.pickupDates.dates else { return 0 }
+            return dates.count
         }
         else if tableView == tableViewTimeslots {
             
-            guard let slots = self.pickupDates.dates![selectedDateRow].slots else { return 0 }
+            guard let dates = self.pickupDates.dates else { return 0 }
+            guard let slots = dates[selectedDateRow].slots else { return 0 }
             return slots.count
         }
         else {
@@ -160,6 +216,15 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         if tableView == tableViewDates {
             
             selectedDateRow = indexPath.row
+            
+            guard let slots = self.pickupDates.dates?[selectedDateRow].slots else { return }
+            
+            let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+            
+            let customHeight = min(self.centerView.frame.size.height, height)
+            
+            self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+            
             tableViewTimeslots.reloadData()
         }
     }
@@ -185,3 +250,25 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
     */
 
 }
+
+
+extension UIImage {
+    func imageWithInsets(insetDimen: CGFloat) -> UIImage {
+        return imageWithInset(insets: UIEdgeInsets(top: insetDimen, left: insetDimen, bottom: insetDimen, right: insetDimen))
+    }
+    
+    func imageWithInset(insets: UIEdgeInsets) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(
+            
+            CGSize(width: self.size.width,
+                   height: self.size.height + insets.top + insets.bottom), false, self.scale)
+        let origin = CGPoint(x: 0, y: insets.top)
+        self.draw(at: origin)
+        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return imageWithInsets!
+    }
+}
+
+
+
