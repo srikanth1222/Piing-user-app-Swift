@@ -1,6 +1,0 @@
-framework module Pods_Piing_user {
-  umbrella header "Pods-Piing user-umbrella.h"
-
-  export *
-  module * { export * }
-}
