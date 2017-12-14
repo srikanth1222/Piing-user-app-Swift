@@ -66,22 +66,26 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var lblCurtain: UILabel!
     @IBOutlet weak var lblCarpet: UILabel!
     
+    @IBOutlet weak var hexagonImageViewButton: UIButton!
     
-    var lblLine:UILabel?
+    var lblLine: UILabel?
     
-    @IBOutlet weak var lblPickupDateAndTime: UILabel!
+    @IBOutlet weak var pickupDateAndTimeButton: UIButton!
     @IBOutlet weak var dateTimeView: UIView!
     
     var greenDCTSTackView = UIStackView()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-                
+        
         //let camera = GMSCameraPosition.camera(withLatitude: 1.307924, longitude: 103.840963, zoom: 14.0)
-        let camera = GMSCameraPosition.camera(withLatitude: 1.307924, longitude: 103.840963, zoom: 14.0, bearing: 270, viewingAngle: 0)
+        let camera = GMSCameraPosition.camera(withLatitude: AppDelegate.latitude, longitude: AppDelegate.longitude, zoom: 15.0, bearing: 270, viewingAngle: 0)
         
         mapView = GMSMapView.map(withFrame: CGRect(x: 0.0, y: 0.0, width: view.frame.size.width, height: view.frame.size.height * 0.8), camera: camera)
+        
+        self.perform(#selector(animateMapView), with: nil, afterDelay: 1.5)
         
         do {
             // Set the map style by passing the URL of the local file.
@@ -123,9 +127,8 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         let tapPickupDatesGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnPickupDatesView))
         dateTimeView.addGestureRecognizer(tapPickupDatesGesture)
         
-        
-        //Setting ServiceType Header Labels
-        settingUpServiceTypeHeaderLabels()
+        hexagonImageViewButton.imageEdgeInsets = UIEdgeInsetsMake(hexagonImageViewButton.frame.size.height * 0.1, 0, hexagonImageViewButton.frame.size.height * 0.1, 0)
+        hexagonImageViewButton.imageView?.contentMode = .scaleAspectFit
         
         //Setting ServiceType Labels
         settingUpServiceTypeLabels()
@@ -136,6 +139,21 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         // Setting Pickup address
         settingUpPickupDeliveryAddress()
         
+    }
+    
+    @objc func animateMapView() {
+        
+        mapView.animate(toZoom: 16)
+        
+//        let target = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
+//
+//        UIView.animate(withDuration: 5.6, delay: 0.0, options: .curveEaseInOut, animations: {
+//
+//            self.mapView.camera = GMSCameraPosition.camera(withTarget: target, zoom: 16)
+//
+//        }) { (success) in
+//
+//        }
     }
     
     func settingUpPickupDeliveryAddress() {
@@ -302,18 +320,37 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         lblCarpet.minimumScaleFactor = 0.5
         
         
+        addressView.backgroundColor = .clear
+        topGradientEffectImageView.backgroundColor = .clear
+        topGradientEffectImageView.isUserInteractionEnabled = false
+        
+        
+//        let shadowSize : CGFloat = 10.0
+//        let shadowPath = UIBezierPath(rect: CGRect(x: 0,
+//                                                   y: 0,
+//                                                   width: topGradientEffectImageView.frame.size.width,
+//                                                   height: topGradientEffectImageView.frame.size.height + shadowSize))
+//        topGradientEffectImageView.layer.masksToBounds = false
+//        topGradientEffectImageView.layer.shadowColor = UIColor.white.cgColor
+//        topGradientEffectImageView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+//        topGradientEffectImageView.layer.shadowOpacity = 0.5
+//        topGradientEffectImageView.layer.shadowPath = shadowPath.cgPath
+        
         let newTopConstraint = self.topGradientMultiplierConstraint.constraintWithMultiplier(0.28)
         self.view!.removeConstraint(self.topGradientMultiplierConstraint)
         self.view!.addConstraint(newTopConstraint)
         self.topGradientMultiplierConstraint = newTopConstraint
         
         
+        bottomGradientEffectImageView.backgroundColor = .clear
+        //bottomGradientEffectImageView.isUserInteractionEnabled = false
+        
         let newBottomConstraint = self.bottomGradientMultiplierConstraint.constraintWithMultiplier(0.7)
         self.view!.removeConstraint(self.bottomGradientMultiplierConstraint)
         self.view!.addConstraint(newBottomConstraint)
         self.bottomGradientMultiplierConstraint = newBottomConstraint
         
-        self.view!.layoutIfNeeded()
+        //self.view!.layoutIfNeeded()
     }
     
     func settingUpServiceTypeHeaderLabels() {
@@ -342,7 +379,8 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         
         // Setting Pickup date and time
         
-        lblPickupDateAndTime.numberOfLines = 0
+        pickupDateAndTimeButton.titleLabel?.numberOfLines = 2
+        //lblPickupDateAndTime.backgroundColor = .red
         
         let strPickupDate = "PICKUP DATE : TIME"
         let strPickupTime = "\nNEXT PICKUP 3 - 4 PM"
@@ -356,7 +394,12 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         
         attrPickupDate.append(attrPickupTime)
         
-        lblPickupDateAndTime.attributedText = attrPickupDate
+        pickupDateAndTimeButton.setAttributedTitle(attrPickupDate, for: .normal)
+        
+        pickupDateAndTimeButton.imageEdgeInsets = UIEdgeInsetsMake(pickupDateAndTimeButton.frame.size.height * 0.2, pickupDateAndTimeButton.frame.size.width * 0.1, pickupDateAndTimeButton.frame.size.height * 0.2, -pickupDateAndTimeButton.frame.size.width * 0.0)
+        //pickupDateAndTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, pickupDateAndTimeButton.frame.size.width * 0.08)
+        
+        pickupDateAndTimeButton.imageView?.contentMode = .scaleAspectFit
         
     }
     
@@ -377,6 +420,14 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
     @objc func tapOnPickupAddressStackView()
     {
         print("Tapped on pickup address stack view")
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        guard let showAddress = storyBoard.instantiateViewController(withIdentifier: "ShowAddressViewController") as? ShowAddressViewController else { return }
+        
+        let navShowAddrVC = UINavigationController(rootViewController: showAddress)
+        navShowAddrVC.isNavigationBarHidden = true
+        present(navShowAddrVC, animated: true, completion: nil)
     }
     
     @objc func tapOnDeliveryAddressStackView()
@@ -407,6 +458,9 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         
         if lblLine == nil {
             
+            //Setting ServiceType Header Labels
+            settingUpServiceTypeHeaderLabels()
+            
             let getframe = scrollViewServicesTitle.convert(scrollViewServicesTitle.bounds, to: self.view)
             
             lblLine = UILabel(frame: CGRect(x: view.frame.size.width/2-((view.frame.size.width * 0.15)/2), y: getframe.origin.y + scrollViewServicesTitle.frame.size.height * 0.8, width: view.frame.size.width * 0.15, height: 2))
@@ -420,7 +474,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         if scrollView == scrollViewServices {
             let page = scrollView.contentOffset.x/view.frame.size.width
             
-            print("page: \(page)")
+            //print("page: \(page)")
             
             scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollView.contentOffset.x * 0.65)
         }
@@ -508,13 +562,10 @@ class MapViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
 

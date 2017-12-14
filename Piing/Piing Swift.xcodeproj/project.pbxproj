@@ -12,9 +12,11 @@
 		E60E99351FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */; };
 		E61364DB1FD16DAB0056058F /* AppFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DA1FD16DAB0056058F /* AppFont.swift */; };
 		E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DC1FD1A30B0056058F /* AppColors.swift */; };
+		E628DDF81FE147F300011CFE /* ShowAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */; };
 		E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */; };
 		E64D30151F5FEE3300F7734D /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = E64D30141F5FEE3300F7734D /* style.json */; };
 		E6572F721FDFD460008E4145 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6572F711FDFD460008E4145 /* Default-568h@2x.png */; };
+		E67272531FE1072F00E5F32C /* SummeryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67272521FE1072F00E5F32C /* SummeryViewController.swift */; };
 		E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6746EED1FD93CE00030815B /* DateModel.swift */; };
 		E69FDEB71FD164DA00C171EC /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */; };
 		E69FDEB81FD164DA00C171EC /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA81FD164C900C171EC /* Lato-Black.ttf */; };
@@ -49,9 +51,11 @@
 		E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDeliveryDatesViewController.swift; sourceTree = "<group>"; };
 		E61364DA1FD16DAB0056058F /* AppFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFont.swift; sourceTree = "<group>"; };
 		E61364DC1FD1A30B0056058F /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowAddressViewController.swift; sourceTree = "<group>"; };
 		E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+CenterImageAndTitle.swift"; sourceTree = "<group>"; };
 		E64D30141F5FEE3300F7734D /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
 		E6572F711FDFD460008E4145 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		E67272521FE1072F00E5F32C /* SummeryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummeryViewController.swift; sourceTree = "<group>"; };
 		E6746EED1FD93CE00030815B /* DateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
 		E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		E69FDEA81FD164C900C171EC /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
@@ -161,10 +165,12 @@
 				E6B4558A1FD6861900ADC263 /* WebServices.swift */,
 				E6B354331F5E94E500C6B6FD /* AppDelegate.swift */,
 				E6B354351F5E94E500C6B6FD /* MapViewController.swift */,
+				E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */,
 				E6EC75451FD944B200D65116 /* ResponseModel.swift */,
 				E6746EED1FD93CE00030815B /* DateModel.swift */,
 				E60E99321FD56B58006F1A0F /* SelectPickupDatesViewController.swift */,
 				E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */,
+				E67272521FE1072F00E5F32C /* SummeryViewController.swift */,
 				E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */,
 				E6B354371F5E94E500C6B6FD /* Main.storyboard */,
 				E6B3543A1F5E94E500C6B6FD /* Assets.xcassets */,
@@ -329,9 +335,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E628DDF81FE147F300011CFE /* ShowAddressViewController.swift in Sources */,
 				E61364DB1FD16DAB0056058F /* AppFont.swift in Sources */,
 				E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */,
 				E6B354361F5E94E500C6B6FD /* MapViewController.swift in Sources */,
+				E67272531FE1072F00E5F32C /* SummeryViewController.swift in Sources */,
 				E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */,
 				E60E99331FD56B58006F1A0F /* SelectPickupDatesViewController.swift in Sources */,
 				E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */,

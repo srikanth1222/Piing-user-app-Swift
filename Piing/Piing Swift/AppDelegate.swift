@@ -19,8 +19,11 @@ func googleApiKey () -> String {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
+    
+    public static let latitude : CLLocationDegrees = 1.307924
+    public static let longitude : CLLocationDegrees = 103.840963
     
     public static var GLOBAL_FONT_SIZE: CGFloat {
         
@@ -55,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    public static let constantDictValues = ["uid" : "20316", "t" : "11ysnv0sb8"]
+    public static let constantDictValues = ["uid" : "20316", "t" : "sr5o2edk80"]
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

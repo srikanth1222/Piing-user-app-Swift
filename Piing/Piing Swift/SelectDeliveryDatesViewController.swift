@@ -159,6 +159,18 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
                 //lblDate.textAlignment = .center
                 lblDate.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-1)
                 cell?.contentView.addSubview(lblDate)
+                
+                let discountImageView = UIImageView()
+                discountImageView.tag = 2
+                discountImageView.contentMode = .scaleAspectFit
+                cell?.contentView.addSubview(discountImageView)
+                
+                let priceIncreaseIcon = UIButton(type: .custom)
+                priceIncreaseIcon.tag = 3
+                priceIncreaseIcon.titleLabel?.numberOfLines = 2;
+                priceIncreaseIcon.imageView?.contentMode = .scaleAspectFit
+                cell?.contentView.addSubview(priceIncreaseIcon)
+                
             }
             
             let bgColorView = UIView()
@@ -180,11 +192,49 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             
             guard let lblDate = cell?.contentView.viewWithTag(1) as? UILabel else { return cell!}
             
+            guard let discountImageView = cell?.contentView.viewWithTag(2) as? UIImageView else { return cell!}
+            
+            guard let priceIncreaseIcon = cell?.contentView.viewWithTag(3) as? UIButton else { return cell!}
+            
             let size = newDateStr.sizeOfString(font: lblDate.font, constrainedToWidth: Double(tableViewDates.frame.size.width * 0.8))
             
-            lblDate.frame = CGRect(x: tableViewDates.frame.size.width * 0.1, y: 0, width: size.width, height: tableViewDates.rowHeight)
+            lblDate.frame = CGRect(x: tableViewDates.frame.size.width * 0.07, y: 0, width: size.width, height: tableViewDates.rowHeight)
+            
+            discountImageView.frame = CGRect(x: lblDate.frame.maxX + 5, y: (tableViewDates.rowHeight * 0.5)/2, width: 30, height: tableViewDates.rowHeight * 0.5)
+            
+            priceIncreaseIcon.frame = CGRect(x: discountImageView.frame.maxX + 5, y: 0, width: tableViewDates.frame.size.width-discountImageView.frame.maxX, height: tableViewDates.rowHeight)
+            priceIncreaseIcon.contentHorizontalAlignment = .left
+            priceIncreaseIcon.titleLabel?.adjustsFontSizeToFitWidth = true;
+            //priceIncreaseIcon.backgroundColor = .green
             
             lblDate.text = newDateStr
+            
+            if dateModel.dis == 0 {
+                discountImageView.image = UIImage.init(named: "discount_off_icon")
+                priceIncreaseIcon.setImage(UIImage.init(named: "price_increase_2_times_icon"), for: .normal)
+                
+                let str1 = "2x"
+                let str2 = "\nPRICE"
+                
+                let combined = str1+str2
+                
+                let attrKey1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor: UIColor.gray, NSAttributedStringKey.font: UIFont.init(name: AppFont.APPFONT_BLACK_ITALIC, size: AppDelegate.GLOBAL_FONT_SIZE-3)!]
+                
+                let attrKey2: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor: UIColor.gray, NSAttributedStringKey.font: UIFont.init(name: AppFont.APPFONT_MEDIUM, size: AppDelegate.GLOBAL_FONT_SIZE-7)!]
+                
+                let attrPriceIncrease = NSMutableAttributedString(string: combined)
+                attrPriceIncrease.addAttributes(attrKey1, range: NSMakeRange(0, str1.count))
+                attrPriceIncrease.addAttributes(attrKey2, range: NSMakeRange(str1.count, str2.count))
+                
+                priceIncreaseIcon.setAttributedTitle(attrPriceIncrease, for: .normal)
+                
+                priceIncreaseIcon.imageEdgeInsets = UIEdgeInsetsMake(priceIncreaseIcon.frame.size.height * 0.25, -priceIncreaseIcon.frame.size.height * 0.5, priceIncreaseIcon.frame.size.height * 0.25, 0)
+                
+                priceIncreaseIcon.titleEdgeInsets = UIEdgeInsetsMake(0, -priceIncreaseIcon.frame.size.height * 0.96, 0, 0)
+            }
+            else {
+                discountImageView.image = nil
+            }
             
             return cell!
         }
@@ -238,7 +288,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
                 selectImageView.image = nil
             }
             
-            selectImageView.frame = CGRect(x: lblTimeslot.frame.maxX + 10, y: (tableViewTimeslots.rowHeight * 0.5)/2, width: 30, height: tableViewTimeslots.rowHeight * 0.5)
+            selectImageView.frame = CGRect(x: lblTimeslot.frame.maxX + 5, y: (tableViewTimeslots.rowHeight * 0.5)/2, width: 30, height: tableViewTimeslots.rowHeight * 0.5)
             
             return cell!
         }
@@ -273,6 +323,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
     
     @IBAction func pickupDateTimeslotButtonPressed(_ sender: UIButton) {
         
+        navigationController?.popViewController(animated: true)
     }
     
     

@@ -17,8 +17,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
     @IBOutlet weak var tableViewTimeslots: UITableView!
     
     @IBOutlet weak var bottomDeliveryDateView: UIView!
-    @IBOutlet weak var lblDelivery: UILabel!
-    @IBOutlet weak var imageViewArrow: UIImageView!
+    @IBOutlet weak var deliveryDateTimeButton: UIButton!
     
     var selectedDateRow:Int = 0
     var selectedTimeslotRow:Int = -1
@@ -30,19 +29,16 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         
         // Do any additional setup after loading the view.
         
-        // Intialize Tap Gesture for bottom date and time slot View
-        let tapBottomDatesGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnBottomDatesView))
-        bottomDeliveryDateView.addGestureRecognizer(tapBottomDatesGesture)
-        
-        
         let attrKeyDelivery = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-4)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
         let attrDelivery = NSAttributedString(string: "DELIVERY DATE : TIME", attributes: attrKeyDelivery)
         
-        lblDelivery.attributedText = attrDelivery
-        lblDelivery.minimumScaleFactor = 0.5
+        // Set Delivery Date Timeslot
+        deliveryDateTimeButton.setAttributedTitle(attrDelivery, for: .normal)
+        deliveryDateTimeButton.imageEdgeInsets = UIEdgeInsetsMake(deliveryDateTimeButton.frame.size.height * 0.2, 0, deliveryDateTimeButton.frame.size.height * 0.2, -deliveryDateTimeButton.frame.size.width * 0.01)
+        deliveryDateTimeButton.imageView?.contentMode = .scaleAspectFit
+        deliveryDateTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -deliveryDateTimeButton.frame.size.width * 0.04)
+        //deliveryDateTimeButton.backgroundColor = .red
         
-        let image = UIImage.init(named: "right_arrow_icon")?.imageWithInsets(insetDimen: imageViewArrow.frame.size.width * 0.5)
-        imageViewArrow.image = image
         
         centerView.backgroundColor =  AppColors.RGBColor(r: 238, g: 239, b: 243, a: 1.0)
         tableViewDates.backgroundColor = .clear
@@ -82,8 +78,8 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
                 self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
                 
-                self.tableViewDates.reloadData()
-                self.tableViewTimeslots.reloadData()
+//                self.tableViewDates.reloadData()
+//                self.tableViewTimeslots.reloadData()
                 
                 guard let dates = self.pickupDates.dates else { return }
                 
@@ -94,7 +90,6 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
                 
                 
-                
                 guard let slots = dates[self.selectedDateRow].slots else { return }
                 
                 let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
@@ -103,6 +98,8 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 
                 self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
                 
+                self.tableViewDates.reloadSections(IndexSet(integer: 0), with: .fade)
+                self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
                 
                 let indexPath = IndexPath(row: 0, section: 0)
                 self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
@@ -113,18 +110,6 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             }
         })
     }
-    
-    @objc func tapOnBottomDatesView() {
-        
-        print("Tapped on Bottom Delivery date View")
-        
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        
-        guard let selectDeliveryDatesVC = storyBoard.instantiateViewController(withIdentifier: "SelectDeliveryDatesViewController") as? SelectDeliveryDatesViewController else { return }
-        
-        self.navigationController?.pushViewController(selectDeliveryDatesVC, animated: true)
-    }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -232,14 +217,14 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             
             lblTimeslot.text = slotsModel.slot
             
-            if selectedTimeslotRow == indexPath.row {
+            if self.selectedTimeslotRow == indexPath.row {
                 selectImageView.image = UIImage.init(named: "timeslot_selection")
             }
             else {
                 selectImageView.image = nil
             }
             
-            selectImageView.frame = CGRect(x: lblTimeslot.frame.maxX + 10, y: (tableViewTimeslots.rowHeight * 0.5)/2, width: 30, height: tableViewTimeslots.rowHeight * 0.5)
+            selectImageView.frame = CGRect(x: lblTimeslot.frame.maxX + 7, y: (tableViewTimeslots.rowHeight * 0.5)/2, width: 30, height: tableViewTimeslots.rowHeight * 0.5)
             
             return cell!
         }
@@ -249,6 +234,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         
         if tableView == tableViewDates {
             
+            tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             selectedDateRow = indexPath.row
             
             selectedTimeslotRow = -1
@@ -259,18 +245,34 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             
             let customHeight = min(self.centerView.frame.size.height, height)
             
-            self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                
+                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                
+            }, completion: { (success) in
+                
+            })
             
-            tableViewTimeslots.reloadData()
+            tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
         }
         else {
             
+            let previousIndexpath = IndexPath(row: selectedTimeslotRow, section: 0)
+            
             selectedTimeslotRow = indexPath.row
             
-            tableView.reloadData()
+            tableView.reloadRows(at: [previousIndexpath, indexPath], with: .fade)
         }
     }
     
+    @IBAction func deliveryDateTimeButtonPressed(_ sender: UIButton) {
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        guard let selectDeliveryDatesVC = storyBoard.instantiateViewController(withIdentifier: "SelectDeliveryDatesViewController") as? SelectDeliveryDatesViewController else { return }
+        
+        self.navigationController?.pushViewController(selectDeliveryDatesVC, animated: true)
+    }
     
     @IBAction func cancelButtonPressed(_ sender: Any) {
         
