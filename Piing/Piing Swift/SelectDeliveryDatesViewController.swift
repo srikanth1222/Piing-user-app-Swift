@@ -21,7 +21,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
     var selectedDateRow:Int = 0
     var selectedTimeslotRow:Int = -1
     
-    var pickupDates = ResponseModel()
+    var deliveryDates = ResponseModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         summeryButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -summeryButton.frame.size.width * 0.3)
         //summeryButton.backgroundColor = UIColor.red
         
-        var dictPrams = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        var dictPrams: [String:Any] = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
         
         for(key, value) in AppDelegate.constantDictValues {
             dictPrams[key] = value
@@ -73,43 +73,53 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             
             do {
                 
-                self.pickupDates = try JSONDecoder().decode(ResponseModel.self, from: data)
+                self.deliveryDates = try JSONDecoder().decode(ResponseModel.self, from: data)
                 
                 //print(self.pickupDates)
                 
-                self.tableViewDates.dataSource = self
-                self.tableViewDates.delegate = self
-                
-                self.tableViewTimeslots.dataSource = self
-                self.tableViewTimeslots.delegate = self
-                
-                self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
-                self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
-                
-                self.tableViewDates.reloadData()
-                self.tableViewTimeslots.reloadData()
-                
-                guard let dates = self.pickupDates.dates else { return }
-                
-                let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
-                
-                let customHeightDate = min(self.centerView.frame.size.height, heightDate)
-                
-                self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
-                
-                
-                
-                guard let slots = dates[self.selectedDateRow].slots else { return }
-                
-                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-                
-                let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
-                
-                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
-                
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                if self.deliveryDates.s == 1 {
+                    
+                    self.tableViewDates.dataSource = self
+                    self.tableViewDates.delegate = self
+                    
+                    self.tableViewTimeslots.dataSource = self
+                    self.tableViewTimeslots.delegate = self
+                    
+                    self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
+                    self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
+                    
+                    self.tableViewDates.reloadData()
+                    self.tableViewTimeslots.reloadData()
+                    
+                    guard let dates = self.deliveryDates.dates else { return }
+                    
+                    let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
+                    
+                    let customHeightDate = min(self.centerView.frame.size.height, heightDate)
+                    
+                    self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
+                    
+                    
+                    
+                    guard let slots = dates[self.selectedDateRow].slots else { return }
+                    
+                    let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                    
+                    let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                    
+                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                    
+                    
+                    let indexPath = IndexPath(row: 0, section: 0)
+                    self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                }
+                else if self.deliveryDates.s == 100 {
+                    AppDelegate.logoutFromTheApp()
+                    return
+                }
+                else {
+                    
+                }
             }
             catch let jsonDecodeErr {
                 
@@ -118,7 +128,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         })
     }
     
-    @objc func tapOnBottomDatesView() {
+    @objc func tappedOnBottomDatesView() {
         
         print("Tapped on Bottom Delivery date View")
         
@@ -129,12 +139,12 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         
         if tableView == tableViewDates {
             
-            guard let dates = self.pickupDates.dates else { return 0 }
+            guard let dates = self.deliveryDates.dates else { return 0 }
             return dates.count
         }
         else if tableView == tableViewTimeslots {
             
-            guard let dates = self.pickupDates.dates else { return 0 }
+            guard let dates = self.deliveryDates.dates else { return 0 }
             guard let slots = dates[selectedDateRow].slots else { return 0 }
             return slots.count
         }
@@ -179,7 +189,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             
             cell?.backgroundColor = .clear
             
-            let dateModel = self.pickupDates.dates![indexPath.row]
+            let dateModel = self.deliveryDates.dates![indexPath.row]
             guard let dateStr = dateModel.date else { return cell!}
             
             let dateFormatter = DateFormatter()
@@ -263,7 +273,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             cell?.backgroundColor = .clear
             cell?.selectionStyle = .none
             
-            let slotsModel = self.pickupDates.dates![selectedDateRow].slots![indexPath.row]
+            let slotsModel = self.deliveryDates.dates![selectedDateRow].slots![indexPath.row]
             
             guard let lblTimeslot = cell?.contentView.viewWithTag(1) as? UILabel else { return cell!}
             
@@ -302,7 +312,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             
             selectedTimeslotRow = -1
             
-            guard let slots = self.pickupDates.dates?[selectedDateRow].slots else { return }
+            guard let slots = self.deliveryDates.dates?[selectedDateRow].slots else { return }
             
             let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
             

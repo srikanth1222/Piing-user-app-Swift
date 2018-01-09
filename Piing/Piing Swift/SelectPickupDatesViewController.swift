@@ -24,6 +24,8 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
     
     var pickupDates = ResponseModel()
     
+    var addressModel: AddressModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +49,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         tableViewTimeslots.backgroundColor = .white
         tableViewTimeslots.separatorStyle = .none
         
-        var dictPrams = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        var dictPrams: [String:Any] = ["pickupAddressId" : addressModel?._id as Any, "serviceTypes" : "WI", "orderType" : "S"]
         
         for(key, value) in AppDelegate.constantDictValues {
             dictPrams[key] = value
@@ -67,42 +69,47 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 
                 self.pickupDates = try JSONDecoder().decode(ResponseModel.self, from: data)
                 
-                //print(self.pickupDates)
+                if self.pickupDates.s == 1 {
+                    self.tableViewDates.dataSource = self
+                    self.tableViewDates.delegate = self
+                    
+                    self.tableViewTimeslots.dataSource = self
+                    self.tableViewTimeslots.delegate = self
+                    
+                    self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
+                    self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
+                    
+                    guard let dates = self.pickupDates.dates else { return }
+                    
+                    let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
+                    
+                    let customHeightDate = min(self.centerView.frame.size.height, heightDate)
+                    
+                    self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
+                    
+                    
+                    guard let slots = dates[self.selectedDateRow].slots else { return }
+                    
+                    let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                    
+                    let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                    
+                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                    
+                    self.tableViewDates.reloadSections(IndexSet(integer: 0), with: .fade)
+                    self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+                    
+                    let indexPath = IndexPath(row: 0, section: 0)
+                    self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                }
+                else if self.pickupDates.s == 100 {
+                    AppDelegate.logoutFromTheApp()
+                    return
+                }
+                else {
+                    
+                }
                 
-                self.tableViewDates.dataSource = self
-                self.tableViewDates.delegate = self
-                
-                self.tableViewTimeslots.dataSource = self
-                self.tableViewTimeslots.delegate = self
-                
-                self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
-                self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
-                
-//                self.tableViewDates.reloadData()
-//                self.tableViewTimeslots.reloadData()
-                
-                guard let dates = self.pickupDates.dates else { return }
-                
-                let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
-                
-                let customHeightDate = min(self.centerView.frame.size.height, heightDate)
-                
-                self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
-                
-                
-                guard let slots = dates[self.selectedDateRow].slots else { return }
-                
-                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-                
-                let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
-                
-                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
-                
-                self.tableViewDates.reloadSections(IndexSet(integer: 0), with: .fade)
-                self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
-                
-                let indexPath = IndexPath(row: 0, section: 0)
-                self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
             catch let jsonDecodeErr {
                 
@@ -267,9 +274,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
     
     @IBAction func deliveryDateTimeButtonPressed(_ sender: UIButton) {
         
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        
-        guard let selectDeliveryDatesVC = storyBoard.instantiateViewController(withIdentifier: "SelectDeliveryDatesViewController") as? SelectDeliveryDatesViewController else { return }
+        guard let selectDeliveryDatesVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SelectDeliveryDatesViewController") as? SelectDeliveryDatesViewController else { return }
         
         self.navigationController?.pushViewController(selectDeliveryDatesVC, animated: true)
     }
@@ -284,7 +289,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
     // MARK: - Navigation
 

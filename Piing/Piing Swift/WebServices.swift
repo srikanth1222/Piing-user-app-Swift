@@ -12,20 +12,23 @@ import Foundation
 struct WebServices {
     
     // PRODUCTION URLS
-//    public static let BASE_URL = "http://api.piing.com.sg:14161/api/"
-//    public static let BASE_TRACKING_URL = "http://api.piing.com.sg:14161"
+    public static let BASE_URL = "http://api.piing.com.sg:14161/api/"
+    public static let BASE_TRACKING_URL = "http://api.piing.com.sg:14161"
     
     
     // STAGING URLS
-    public static let BASE_URL = "http://api.piing.in:14161/api/"
-    public static let BASE_TRACKING_URL = "http://api.piing.com.in:14161"
+//    public static let BASE_URL = "http://api.piing.in:14161/api/"
+//    public static let BASE_TRACKING_URL = "http://api.piing.com.in:14161"
     
     
+    
+    public static let LOGIN_SERVICE = "user/login"
     public static let GET_PICKUP_DATES_AND_TIMESLOTS = "order/pickupdates"
     public static let GET_DELIVERY_DATES_AND_TIMESLOTS = "order/deliverydates"
+    public static let GET_ADDRESS = "address/get"
+    public static let POSTALCODE_SERVICEABLE = "address/serviceable"
     
-    
-    public static func serviceCall (withURLString urlString:String, parameters: [String : String], completionHandler: @escaping (Error?, Any?, Data?) -> ()) {
+    public static func serviceCall (withURLString urlString:String, parameters: [String : Any], completionHandler: @escaping (Error?, Any?, Data?) -> ()) {
         
         guard let url = URL(string: urlString) else { return }
         

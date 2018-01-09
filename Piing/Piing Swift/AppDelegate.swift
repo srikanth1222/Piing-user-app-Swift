@@ -25,6 +25,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public static let latitude : CLLocationDegrees = 1.307924
     public static let longitude : CLLocationDegrees = 103.840963
     
+    public static let MAIN_STORYBOARD = UIStoryboard(name: "Main", bundle: nil)
+    
+    public static let SCREEN_WIDTH = UIScreen.main.bounds.size.width
+    public static let SCREEN_HEIGHT = UIScreen.main.bounds.size.height
+    
+    public static let ACCEPTABLE_CHARECTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.@"
+    public static let VALIDATE_EMAILID = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+    public static let IS_LOGIN_SUCCEDED = "Login_Succeded"
+    
+    public static let MAP_STYLE = "style"
+    public static let MAP_STYLE_TYPE = "json"
+    
     public static var GLOBAL_FONT_SIZE: CGFloat {
         
         get {
@@ -58,13 +70,130 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    public static let constantDictValues = ["uid" : "20316", "t" : "sr5o2edk80"]
+    public static var constantDictValues = Dictionary<String, Any>()
+    
+    public static func safeAreaTopInset() -> CGFloat {
+        
+        if #available(iOS 11.0, *) {
+            return UIApplication.shared.keyWindow!.safeAreaInsets.top
+        }
+        else {
+           return 0
+        }
+    }
+    
+    public static func safeAreaBottomInset() -> CGFloat {
+        
+        if #available(iOS 11.0, *) {
+            return UIApplication.shared.keyWindow!.safeAreaInsets.bottom
+        }
+        else {
+            return 0
+        }
+    }
+    
+    public static func safeAreaLeftInset() -> CGFloat {
+        
+        if #available(iOS 11.0, *) {
+            return UIApplication.shared.keyWindow!.safeAreaInsets.left
+        }
+        else {
+            return 0
+        }
+    }
+    
+    public static func safeAreaRightInset() -> CGFloat {
+        
+        if #available(iOS 11.0, *) {
+            return UIApplication.shared.keyWindow!.safeAreaInsets.right
+        }
+        else {
+            return 0
+        }
+    }
+    
+    public static func getAttributedString(_ string:String, spacing:Float) -> NSMutableAttributedString {
+        
+        let attrString = NSMutableAttributedString(string: string, attributes: [NSAttributedStringKey.foregroundColor : UIColor.white, .font : UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-1)!, NSAttributedStringKey.kern: NSNumber(value: spacing)])
+        return attrString
+    }
+    
+    public static func getAddressDescription(_ addressModel: AddressModel) -> String {
+        
+        var strLaneAddr = ""
+        
+        if addressModel.line1!.count > 1 {
+            
+            strLaneAddr = addressModel.line1! + " "
+        }
+        if addressModel.line2!.count > 1 {
+            
+            strLaneAddr += addressModel.line2! + " "
+        }
+        
+        strLaneAddr += addressModel.country! + " "
+        strLaneAddr += addressModel.zipcode!
+        
+        return strLaneAddr
+    }
+    
+    public static func showAlertViewWith(message: String, title: String, actionTitle:String) {
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let alertAction = UIAlertAction(title: actionTitle, style: .default, handler: nil)
+        
+        alertController.addAction(alertAction)
+        
+        var topVC = UIApplication.shared.keyWindow?.rootViewController
+        
+        while ((topVC?.presentedViewController) != nil) {
+            
+            topVC = topVC?.presentedViewController
+        }
+        
+        topVC?.present(alertController, animated: true, completion: nil)
+    }
+    
+    public static func logoutFromTheApp() {
+        
+        UserDefaults.standard.set(false, forKey: AppDelegate.IS_LOGIN_SUCCEDED)
+        
+//        guard let loginNavVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "LoginNavViewController") as? UINavigationController else { return }
+//        loginNavVC.isNavigationBarHidden = true
+        
+        guard let welcomeNavVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "NavWelcomeScreenViewController") as? UINavigationController else { return }
+        welcomeNavVC.isNavigationBarHidden = true
+        
+        let appDel = UIApplication.shared.delegate
+        
+        appDel?.window??.rootViewController = welcomeNavVC
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         GMSServices.provideAPIKey(googleApiKey())
         GMSPlacesClient.provideAPIKey(googleApiKey())
+        
+        if UserDefaults.standard.bool(forKey: AppDelegate.IS_LOGIN_SUCCEDED) == true {
+            
+            if UserDefaults.standard.object(forKey: "uid") != nil {
+                AppDelegate.constantDictValues["uid"] = UserDefaults.standard.object(forKey: "uid")
+                AppDelegate.constantDictValues["t"] = UserDefaults.standard.object(forKey: "token")
+            }
+            
+            guard let homePageVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return true }
+            
+            let navVC = UINavigationController(rootViewController: homePageVC)
+            navVC.isNavigationBarHidden = true
+            
+            window?.rootViewController = navVC
+        }
+        else {
+            
+            
+        }
         
         return true
     }
