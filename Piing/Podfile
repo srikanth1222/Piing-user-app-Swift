@@ -10,6 +10,7 @@ target 'Piing Swift' do
   pod 'GoogleMaps'
   pod 'GooglePlaces'
   pod 'Alamofire', '~> 4.5'
+  pod 'KWVerificationCodeView'
   
 end
 

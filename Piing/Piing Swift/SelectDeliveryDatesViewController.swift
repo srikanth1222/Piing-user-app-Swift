@@ -40,9 +40,9 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         
         // Set Pickup Date Timeslot
         pickupDateTimeslotButton.setAttributedTitle(attrPickup, for: .normal)
-        pickupDateTimeslotButton.imageEdgeInsets = UIEdgeInsetsMake(pickupDateTimeslotButton.frame.size.height * 0.2, -pickupDateTimeslotButton.frame.size.width * 0.04, pickupDateTimeslotButton.frame.size.height * 0.2, 0)
         pickupDateTimeslotButton.imageView?.contentMode = .scaleAspectFit
-        pickupDateTimeslotButton.titleEdgeInsets = UIEdgeInsetsMake(0, -pickupDateTimeslotButton.frame.size.width * 0.09, 0, 0)
+        pickupDateTimeslotButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.045, -AppDelegate.SCREEN_WIDTH * 0.03, AppDelegate.SCREEN_WIDTH * 0.045, 0)
+        pickupDateTimeslotButton.titleEdgeInsets = UIEdgeInsetsMake(0, -AppDelegate.SCREEN_WIDTH * 0.07, 0, 0)
         
         
         // Set Summery
@@ -50,10 +50,9 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         let attrSummery = NSAttributedString(string: "SUMMERY", attributes: attrKeySummery)
         
         summeryButton.setAttributedTitle(attrSummery, for: .normal)
-        summeryButton.imageEdgeInsets = UIEdgeInsetsMake(summeryButton.frame.size.height * 0.2, 0, summeryButton.frame.size.height * 0.2, -summeryButton.frame.size.width * 0.1)
         summeryButton.imageView?.contentMode = .scaleAspectFit
-        summeryButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -summeryButton.frame.size.width * 0.3)
-        //summeryButton.backgroundColor = UIColor.red
+        summeryButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.045, 0, AppDelegate.SCREEN_WIDTH * 0.045, -AppDelegate.SCREEN_WIDTH * 0.03)
+        summeryButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -AppDelegate.SCREEN_WIDTH * 0.07)
         
         var dictPrams: [String:Any] = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
         

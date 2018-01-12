@@ -118,8 +118,6 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         }) { (completed) in
             
         }
-        
-        scrollViewTextFields.contentSize = CGSize(width: scrollViewTextFields.frame.size.width, height: scrollViewTextFields.frame.size.height)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -349,7 +347,7 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         
         scrollViewHeight = scrollViewHeight - saveButton.frame.size.height
         
-        self.scrollViewBottomSpaceConstraint.constant = scrollViewHeight
+        self.scrollViewBottomSpaceConstraint.constant = scrollViewHeight + 10
         
         UIView.animate(withDuration: duration, animations: {
 

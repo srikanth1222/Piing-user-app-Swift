@@ -69,6 +69,7 @@ class WelcomeScreenViewController: UIViewController {
             
             nextButton.titleLabel?.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-3)
             nextButton.imageView?.contentMode = .scaleAspectFit
+            nextButton.isEnabled(false)
         }
     }
     
@@ -99,6 +100,10 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
+    @IBOutlet weak var residentButton: UIButton!
+    @IBOutlet weak var touristButton: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,14 +129,11 @@ class WelcomeScreenViewController: UIViewController {
         viewTransperent.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         view.insertSubview(viewTransperent, at: 1)
         
-//        loginButton.imageEdgeInsets = UIEdgeInsetsMake(self.view.frame.size.height * 0.035, 0, self.view.frame.size.height * 0.035, 0)
-//        loginButton.titleEdgeInsets = UIEdgeInsetsMake(0, self.view.frame.size.width * 0.07, 0, 0)
+        nextButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.06, 0, AppDelegate.SCREEN_WIDTH * 0.06, 0)
+        nextButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -AppDelegate.SCREEN_WIDTH * 0.03)
         
-        nextButton.imageEdgeInsets = UIEdgeInsetsMake(nextButton.superview!.frame.size.height * 0.35, 0, nextButton.superview!.frame.size.height * 0.35, 0)
-        nextButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -self.view.frame.size.width * 0.03)
-        
-        backButton.imageEdgeInsets = UIEdgeInsetsMake(backButton.superview!.frame.size.height * 0.35, 0, backButton.superview!.frame.size.height * 0.35, 0)
-        backButton.titleEdgeInsets = UIEdgeInsetsMake(0, -self.view.frame.size.width * 0.03, 0, 0)
+        backButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.06, 0, AppDelegate.SCREEN_WIDTH * 0.06, 0)
+        backButton.titleEdgeInsets = UIEdgeInsetsMake(0, -AppDelegate.SCREEN_WIDTH * 0.03, 0, 0)
         
         personTypeBottomSpaceConstraint.constant = self.view.frame.size.height
     }
@@ -167,13 +169,6 @@ class WelcomeScreenViewController: UIViewController {
         }) { (comepleted) in
             
         }
-        
-//        UIView.animate(withDuration: 0.3, animations: {
-//            viewTransperent.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-//            self.view.layoutIfNeeded()
-//        }) { (comepleted) in
-//
-//        }
     }
     
     @objc func tappedOnPersonTypeView() {
@@ -199,6 +194,13 @@ class WelcomeScreenViewController: UIViewController {
         
         guard let registrationVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "RegistrationViewController") as? RegistrationViewController else { return }
         
+        if residentButton.isSelected {
+            registrationVC.personType = "R"
+        }
+        else {
+            registrationVC.personType = "T"
+        }
+        
         UIView.transition(with: self.navigationController!.view, duration: 0.6, options: .transitionFlipFromRight, animations: {
             
             self.navigationController?.pushViewController(registrationVC, animated: false)
@@ -220,6 +222,22 @@ class WelcomeScreenViewController: UIViewController {
             
         }
     }
+    
+    @IBAction func onPersonTypePressed(_ sender: UIButton) {
+        
+        nextButton.isEnabled(true)
+        
+        residentButton.isSelected = false
+        touristButton.isSelected = false
+        
+        if sender.tag == 1 {
+            residentButton.isSelected = true
+        }
+        else {
+            touristButton.isSelected = true
+        }
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

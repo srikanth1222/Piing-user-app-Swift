@@ -166,6 +166,15 @@
   },
   {
   "featureType": "road.highway",
+  "elementType": "geometry.stroke",
+  "stylers": [
+              {
+              "visibility": "off"
+              }
+              ]
+  },
+  {
+  "featureType": "road.highway",
   "elementType": "labels.text.fill",
   "stylers": [
               {
@@ -230,4 +239,4 @@
               }
               ]
   }
-]
+  ]

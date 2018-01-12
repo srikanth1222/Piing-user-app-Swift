@@ -17,7 +17,11 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
     @IBOutlet weak var tableViewTimeslots: UITableView!
     
     @IBOutlet weak var bottomDeliveryDateView: UIView!
-    @IBOutlet weak var deliveryDateTimeButton: UIButton!
+    @IBOutlet weak var deliveryDateTimeButton: UIButton! {
+        didSet {
+            deliveryDateTimeButton.imageView?.contentMode = .scaleAspectFit
+        }
+    }
     
     var selectedDateRow:Int = 0
     var selectedTimeslotRow:Int = -1
@@ -36,11 +40,8 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         
         // Set Delivery Date Timeslot
         deliveryDateTimeButton.setAttributedTitle(attrDelivery, for: .normal)
-        deliveryDateTimeButton.imageEdgeInsets = UIEdgeInsetsMake(deliveryDateTimeButton.frame.size.height * 0.2, 0, deliveryDateTimeButton.frame.size.height * 0.2, -deliveryDateTimeButton.frame.size.width * 0.01)
-        deliveryDateTimeButton.imageView?.contentMode = .scaleAspectFit
-        deliveryDateTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -deliveryDateTimeButton.frame.size.width * 0.04)
-        //deliveryDateTimeButton.backgroundColor = .red
-        
+        deliveryDateTimeButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.045, 0, AppDelegate.SCREEN_WIDTH * 0.045, 0)
+        deliveryDateTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -AppDelegate.SCREEN_WIDTH * 0.04)
         
         centerView.backgroundColor =  AppColors.RGBColor(r: 238, g: 239, b: 243, a: 1.0)
         tableViewDates.backgroundColor = .clear
@@ -117,6 +118,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             }
         })
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         

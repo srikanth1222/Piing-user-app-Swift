@@ -88,11 +88,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        loginButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_HEIGHT * 0.025, 0, AppDelegate.SCREEN_HEIGHT * 0.025, AppDelegate.SCREEN_WIDTH * 0.03)
+        backButton.imageEdgeInsets = UIEdgeInsetsMake(8, 0, 8, 0)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loginButton.imageEdgeInsets = UIEdgeInsetsMake(view.frame.size.height * 0.025, 0, view.frame.size.height * 0.025, loginButton.frame.size.width * 0.03)
-        backButton.imageEdgeInsets = UIEdgeInsetsMake(view.frame.size.height * 0.02, 0, view.frame.size.height * 0.02, 0)
         
         guard let filePath = Bundle.main.path(forResource: "intra_video", ofType: "mp4") else { return }
         
@@ -337,8 +341,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         
-        
-        if validateEmail(emailString, with: AppDelegate.VALIDATE_EMAILID)
+        if AppDelegate.validateEmail(emailString, with: AppDelegate.VALIDATE_EMAILID)
         {
             print ("valid email")
             
@@ -379,24 +382,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print(jsonErr)
                 }
                 
-                
             })
         }
         else {
             
-            print ("Not a valid email: Failed")
+            AppDelegate.showAlertViewWith(message: "Please enter valid email id.", title: "", actionTitle: "OK")
         }
     }
     
-    func validateEmail(_ email: String, with emailRegEx: String) -> Bool {
-        
-        let test = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return test.evaluate(with: email)
-        
-//        NSPredicate *test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", validateText];
-//        return [test evaluateWithObject:text];
-        
-    }
     
     @IBAction func forgotPasswordPressed(_ sender: UIButton) {
     }

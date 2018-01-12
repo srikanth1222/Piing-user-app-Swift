@@ -12,16 +12,16 @@ import Foundation
 struct WebServices {
     
     // PRODUCTION URLS
-    public static let BASE_URL = "http://api.piing.com.sg:14161/api/"
-    public static let BASE_TRACKING_URL = "http://api.piing.com.sg:14161"
+//    public static let BASE_URL = "http://api.piing.com.sg:14161/api/"
+//    public static let BASE_TRACKING_URL = "http://api.piing.com.sg:14161"
     
     
     // STAGING URLS
-//    public static let BASE_URL = "http://api.piing.in:14161/api/"
-//    public static let BASE_TRACKING_URL = "http://api.piing.com.in:14161"
+    public static let BASE_URL = "http://api.piing.in:14161/api/"
+    public static let BASE_TRACKING_URL = "http://api.piing.com.in:14161"
     
     
-    
+    public static let REGISTER_SERVICE = "user/register"
     public static let LOGIN_SERVICE = "user/login"
     public static let GET_PICKUP_DATES_AND_TIMESLOTS = "order/pickupdates"
     public static let GET_DELIVERY_DATES_AND_TIMESLOTS = "order/deliverydates"

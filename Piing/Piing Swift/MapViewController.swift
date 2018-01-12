@@ -216,6 +216,8 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             self.addressViewBottomConstraint.constant = -self.deliveryAddressStackView.frame.size.height
             self.addressView.backgroundColor = .clear
             self.perform(#selector(self.changeCustomMapViewFrame), with: nil, afterDelay: 0.3)
+            
+            self.scrollViewServicesTitle.setContentOffset(CGPoint(x: (-self.view.frame.size.width * 0.17) + (self.scrollViewServices.contentOffset.x * 0.65), y: 0), animated: true)
         }
         
         //Setting ServiceType Header Labels
@@ -229,7 +231,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         hexagonImageViewButton.imageEdgeInsets = UIEdgeInsetsMake(hexagonImageViewButton.frame.size.height * 0.1, 0, hexagonImageViewButton.frame.size.height * 0.1, 0)
         
-        pickupDateAndTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, -pickupDateAndTimeButton.frame.size.width * 0.15, 0, 0)
+        pickupDateAndTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, -pickupDateAndTimeButton.frame.size.width * 0.18, 0, 0)
         pickupDateAndTimeButton.imageEdgeInsets = UIEdgeInsetsMake(pickupDateAndTimeButton.frame.size.height * 0.28, 0, pickupDateAndTimeButton.frame.size.height * 0.28, -pickupDateAndTimeButton.frame.size.width * 0.05)
     }
     
@@ -240,7 +242,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     func settingUpPickupAndDeliveryAddress() {
         
         lblPickupAddress.numberOfLines = 0
-        lblPickupLaneAddress.numberOfLines = 0
+        lblPickupLaneAddress.numberOfLines = 1
         
         addressArray = self.responseObject?.addresses
         
@@ -261,6 +263,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         guard let addressModel = addressModel1 else { return }
         
         selectedPickupAddressModel = addressModel
+        selectedDeliveryAddressModel = selectedPickupAddressModel
         
         customMapView.showCustomerMarkerOnTheMap(with: selectedPickupAddressModel!)
         customMapView.focusMapToShowAllMarkers()
@@ -281,21 +284,23 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         strIsHome = "  @ " + strIsHome.uppercased()
         
-        let strLaneAddr = AppDelegate.getAddressDescription(selectedPickupAddressModel!)
+        var strLaneAddr = AppDelegate.getAddressDescription(selectedPickupAddressModel!)
         
-        let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+        strLaneAddr = strLaneAddr.lowercased().capitalizingFirstLetter()
         
-        let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+        let attrKeyPickupAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 2.5)]
         
-        let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 2.5)]
         
-        let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
+        let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        
+        let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
         
         let attrPickupAddrText = NSMutableAttributedString(string: strPickupAddrText, attributes: attrKeyPickupAddrText)
         
         if selectedPickupAddressModel?._id == selectedDeliveryAddressModel?._id {
             
-            let strSeparator = " | "
+            let strSeparator = " |  "
             let strDeliveryAddrText = "DELIVERY"
             
             let attrKeySeparator = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!]
@@ -314,6 +319,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         lblPickupAddress.attributedText = attrPickupAddrText
         lblPickupLaneAddress.attributedText = attrLaneAddr
+        //lblPickupLaneAddress.backgroundColor = .red
     }
     
     func setupDeliveryAddress() {
@@ -324,18 +330,20 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         deliveryAddressStackView.isHidden = false
         
         lblDeliveryAddress.numberOfLines = 0
-        lblDeliveryLaneAddress.numberOfLines = 0
+        lblDeliveryLaneAddress.numberOfLines = 1
         
         let strDeliveryAddrText = "DELIVERY"
         let strIsHome = " @ " + (selectedDeliveryAddressModel?.name!)!.uppercased()
         
-        let strLaneAddr = AppDelegate.getAddressDescription(selectedDeliveryAddressModel!)
+        var strLaneAddr = AppDelegate.getAddressDescription(selectedDeliveryAddressModel!)
         
-        let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+        strLaneAddr = strLaneAddr.lowercased().capitalizingFirstLetter()
         
-        let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        let attrKeyDeliveryAddrText = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 2.5)]
         
-        let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-6)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
+        let attrKeyIsHome = [NSAttributedStringKey.foregroundColor : UIColor.gray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        
+        let attrKeyLaneAddr = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 1.2)]
         
         let attrDeliveryAddrText = NSMutableAttributedString(string: strDeliveryAddrText, attributes: attrKeyDeliveryAddrText)
         let attrIsHome = NSMutableAttributedString(string: strIsHome, attributes: attrKeyIsHome)
@@ -349,8 +357,6 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     
     func settingUpServiceTypeLabels() {
         
-        scrollViewServices.contentSize = CGSize(width: view.frame.size.width*3, height: scrollViewServices.frame.size.height)
-        
         loadWashBtn.imageView!.contentMode = .scaleAspectFit
         dryCleaningBtn.imageView!.contentMode = .scaleAspectFit
         washIronBtn.imageView!.contentMode = .scaleAspectFit
@@ -362,55 +368,55 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         carpetBtn.imageView!.contentMode = .scaleAspectFit
         
         
-        let attrKeyLoadwash = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyLoadwash = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrLoadwash = NSAttributedString(string: "LOAD WASH", attributes: attrKeyLoadwash)
         
         lblLoadWash.attributedText = attrLoadwash
         lblLoadWash.minimumScaleFactor = 0.5
         
-        let attrKeyDC = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyDC = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrDC = NSAttributedString(string: "DRY CLEANING", attributes: attrKeyDC)
         
         lblDryCleaning.attributedText = attrDC
         lblDryCleaning.minimumScaleFactor = 0.5
         
-        let attrKeyWashiron = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyWashiron = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrWashiron = NSAttributedString(string: "WASH & IRON", attributes: attrKeyWashiron)
         
         lblWashIron.attributedText = attrWashiron
         lblWashIron.minimumScaleFactor = 0.5
         
-        let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrIroning = NSAttributedString(string: "IRONING", attributes: attrKeyIroning)
         
         lblIroning.attributedText = attrIroning
         lblIroning.minimumScaleFactor = 0.5
         
-        let attrKeyBags = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyBags = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrBags = NSAttributedString(string: "BAGS", attributes: attrKeyBags)
         
         lblBags.attributedText = attrBags
         lblBags.minimumScaleFactor = 0.5
         
-        let attrKeyShoes = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyShoes = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrShoes = NSAttributedString(string: "SHOES", attributes: attrKeyShoes)
         
         lblShoes.attributedText = attrShoes
         lblShoes.minimumScaleFactor = 0.5
         
-        let attrKeyLeather = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyLeather = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrLeather = NSAttributedString(string: "LEATHER", attributes: attrKeyLeather)
         
         lblLeather.attributedText = attrLeather
         lblLeather.minimumScaleFactor = 0.5
         
-        let attrKeyCurtain = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyCurtain = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrCurtain = NSAttributedString(string: "CURTAINS", attributes: attrKeyCurtain)
         
         lblCurtain.attributedText = attrCurtain
         lblCurtain.minimumScaleFactor = 0.5
         
-        let attrKeyCarpet = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrKeyCarpet = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
         let attrCarpet = NSAttributedString(string: "CARPET", attributes: attrKeyCarpet)
         
         lblCarpet.attributedText = attrCarpet
@@ -434,7 +440,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         for title in arrayServicesTitle {
             
             let lblTitle = UILabel(frame: CGRect(x: (view.frame.size.width * 0.65) * CGFloat(count), y: 0, width: (view.frame.size.width * 0.65), height: self.scrollViewServicesTitle.frame.size.height))
-            
+            //lblTitle.translatesAutoresizingMaskIntoConstraints = false
             let attrKeyTitle = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-2)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
             let attrTitle = NSMutableAttributedString(string: title, attributes: attrKeyTitle)
             
@@ -445,9 +451,10 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             count += 1
         }
         
-        scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
+        //scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
         
-        let lblLineUnderServiceTypeHeaderTitles = UILabel(frame: CGRect(x: view.frame.size.width/2-((view.frame.size.width * 0.15)/2), y: self.scrollViewServicesTitle.frame.size.height * 0.9, width: view.frame.size.width * 0.15, height: 1.2))
+        let lblLineUnderServiceTypeHeaderTitles = UILabel(frame: CGRect(x: view.frame.size.width/2-((view.frame.size.width * 0.15)/2), y: self.scrollViewServicesTitle.frame.size.height * 0.9, width: view.frame.size.width * 0.15, height: 2))
+        //lblLineUnderServiceTypeHeaderTitles.translatesAutoresizingMaskIntoConstraints = false
         lblLineUnderServiceTypeHeaderTitles.backgroundColor = AppColors.blueColor
         servicesView.addSubview(lblLineUnderServiceTypeHeaderTitles);
     }
@@ -456,6 +463,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         super.viewWillAppear(animated)
         scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
+        //scrollViewServicesTitle.backgroundColor = .red
     }
     
     @objc func tappedOnPickupAddressStackView()
@@ -561,6 +569,10 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             
             //print("page: \(page)")
             
+            if scrollView.contentOffset.y != 0 {
+                scrollView.contentOffset.y = 0
+            }
+            
             scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollView.contentOffset.x * 0.65)
         }
     }
@@ -572,7 +584,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             sender.isSelected = true
             
             greenDCTSTackView.axis = .vertical
-            greenDCTSTackView.spacing = -4
+            //greenDCTSTackView.spacing = -4
             greenDCTSTackView.alignment = .center
             
             if greenDCTSTackView.subviews.count == 0
@@ -581,6 +593,10 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
                 btnGreenDC.setImage(UIImage.init(named: "wash_iron"), for: .normal)
                 btnGreenDC.imageView!.contentMode = .scaleAspectFit
                 btnGreenDC.addTarget(self, action: #selector(btnGreenDCPressed(_:)), for: .touchUpInside)
+                btnGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 749), for: .vertical)
+                
+                let aspectRatioConstraint = NSLayoutConstraint(item: btnGreenDC, attribute: .height, relatedBy: .equal, toItem: btnGreenDC, attribute: .width, multiplier: (1.0 / 1.0),constant: 0)
+                btnGreenDC.addConstraint(aspectRatioConstraint)
                 
                 let lblGreenDC = UILabel()
                 let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
@@ -589,24 +605,19 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
                 lblGreenDC.attributedText = attrIroning
                 lblGreenDC.minimumScaleFactor = 0.5
                 
+                lblGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 751), for: .vertical)
+                lblGreenDC.setContentHuggingPriority(UILayoutPriority.init(rawValue: 1000), for: .vertical)
+                
                 greenDCTSTackView.addArrangedSubview(btnGreenDC)
                 greenDCTSTackView.addArrangedSubview(lblGreenDC)
                 
                 self.personalCareStackView.insertArrangedSubview(greenDCTSTackView, at: 2)
                 greenDCTSTackView.isHidden = true
-                
-                let insets:CGFloat = 3
-                btnGreenDC.imageEdgeInsets = .init(top: insets, left: insets, bottom: insets, right: insets)
             }
             
-            let newConstraint = self.personalCaremultiplier.constraintWithMultiplier(0.75)
-            self.view!.removeConstraint(self.personalCaremultiplier)
-            self.view!.addConstraint(newConstraint)
-            self.personalCaremultiplier = newConstraint
-            self.view.setNeedsLayout()
+            personalCareStackView.spacing = 0
             
-            let insets:CGFloat = 3
-            dryCleaningBtn.imageEdgeInsets = .init(top: insets, left: insets, bottom: insets, right: insets)
+            changePersonalCareMultiplier(with: 0.75)
             
             UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
                 
@@ -616,7 +627,6 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
                 
                 self.greenDCTSTackView.isHidden = false
                 
-                
             }) { (success) in
                 
             }
@@ -625,13 +635,9 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             
             sender.isSelected = false
             
-            dryCleaningBtn.imageEdgeInsets = .zero
+            personalCareStackView.spacing = 5
             
-            let newConstraint = self.personalCaremultiplier.constraintWithMultiplier(0.96)
-            self.view!.removeConstraint(self.personalCaremultiplier)
-            self.view!.addConstraint(newConstraint)
-            self.personalCaremultiplier = newConstraint
-            self.view!.layoutIfNeeded()
+            changePersonalCareMultiplier(with: 0.96)
             
             UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
                 
@@ -641,24 +647,22 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
                 
                 self.greenDCTSTackView.isHidden = true
                 
-                
             }) { (success) in
                 
             }
         }
+        
+        scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
+        
     }
     
     @objc func btnGreenDCPressed(_ sender: UIButton) {
         
         dryCleaningBtn.isSelected = false
         
-        dryCleaningBtn.imageEdgeInsets = .zero
+        personalCareStackView.spacing = 5
         
-        let newConstraint = self.personalCaremultiplier.constraintWithMultiplier(0.96)
-        self.view!.removeConstraint(self.personalCaremultiplier)
-        self.view!.addConstraint(newConstraint)
-        self.personalCaremultiplier = newConstraint
-        self.view!.layoutIfNeeded()
+        changePersonalCareMultiplier(with: 0.96)
         
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
             
@@ -668,10 +672,18 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             
             self.greenDCTSTackView.isHidden = true
             
-            
         }) { (success) in
             
         }
+    }
+    
+    func changePersonalCareMultiplier(with multiplier:CGFloat) {
+        
+        let newConstraint = self.personalCaremultiplier.constraintWithMultiplier(multiplier)
+        self.view!.removeConstraint(self.personalCaremultiplier)
+        self.view!.addConstraint(newConstraint)
+        self.personalCaremultiplier = newConstraint
+        self.view!.layoutIfNeeded()
     }
     
     override func didReceiveMemoryWarning() {
@@ -686,4 +698,16 @@ extension NSLayoutConstraint {
         return NSLayoutConstraint(item: self.firstItem as Any, attribute: self.firstAttribute, relatedBy: self.relation, toItem: self.secondItem, attribute: self.secondAttribute, multiplier: multiplier, constant: self.constant)
     }
 }
+
+
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+}
+
 

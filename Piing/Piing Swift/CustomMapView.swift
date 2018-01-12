@@ -44,7 +44,7 @@ class CustomMapView: UIView {
     
     @objc func animateMapView() {
         
-        mapView.animate(toZoom: 16)
+        mapView.animate(toZoom: 15)
         
         //        let target = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
         //

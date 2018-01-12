@@ -41,32 +41,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         get {
             
-            let height = UIScreen.main.bounds.size.height
+            //return AppDelegate.SCREEN_HEIGHT * 0.028
             
-            if height == 480 || (height > 450 && height <= 480) {
-                
-                return 14.0
-            }
-            else if height == 568 || (height > 540 && height <= 568) {
-                
-                return 16.0
-            }
-            else if height == 667 || (height > 640 && height <= 667) {
-                
-                return 18.0
-            }
-            else if height == 736 || (height > 700 && height <= 736) {
-                
-                return 20.0
-            }
-            else if height == 812 || (height > 780 && height <= 812) {
-                
-                return 19.0
-            }
-            else {
-                
-                return 20.0
-            }
+            return AppDelegate.SCREEN_WIDTH * 0.05
+            
+//            let height = UIScreen.main.bounds.size.height
+//
+//            if height == 480 || (height > 450 && height <= 480) {
+//
+//                return 14.0
+//            }
+//            else if height == 568 || (height > 540 && height <= 568) {
+//
+//                return 16.0
+//            }
+//            else if height == 667 || (height > 640 && height <= 667) {
+//
+//                return 18.0
+//            }
+//            else if height == 736 || (height > 700 && height <= 736) {
+//
+//                return 20.0
+//            }
+//            else if height == 812 || (height > 780 && height <= 812) {
+//
+//                return 19.0
+//            }
+//            else {
+//
+//                return 20.0
+//            }
         }
     }
     
@@ -135,6 +139,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         strLaneAddr += addressModel.zipcode!
         
         return strLaneAddr
+    }
+    
+    public static func validateEmail(_ email: String, with emailRegEx: String) -> Bool {
+        
+        let test = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return test.evaluate(with: email)
     }
     
     public static func showAlertViewWith(message: String, title: String, actionTitle:String) {
