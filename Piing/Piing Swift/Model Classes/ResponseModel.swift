@@ -15,5 +15,6 @@ struct ResponseModel: Decodable {
     var error: String?
     var s: Int?
     var address: ValidPostalCodeModel?
+    var paymentMethod: PaymentModel?
 }
 

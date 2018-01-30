@@ -10,32 +10,32 @@ import UIKit
 
 class AddAddressViewController: UIViewController, UITextFieldDelegate {
     
-    let selectedBorderWidth = CGFloat(1.3)
-    let borderWidth = CGFloat(1.0)
-    let duration = 0.2
+    private let selectedBorderWidth = CGFloat(1.3)
+    private let borderWidth = CGFloat(1.0)
+    private let duration = 0.2
     
-    @IBOutlet weak var saveButton: UIButton! {
+    @IBOutlet private weak var saveButton: UIButton! {
         didSet {
             let attrString = AppDelegate.getAttributedString("SAVE", spacing: 1.5)
             saveButton.setAttributedTitle(attrString, for: .normal)
         }
     }
     
-    @IBOutlet weak var addAddressView: UIView!
+    @IBOutlet private weak var addAddressView: UIView!
     
-    @IBOutlet weak var scrollViewTextFields: UIScrollView!
+    @IBOutlet private weak var scrollViewTextFields: UIScrollView!
     
-    @IBOutlet weak var scrollViewBottomSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var scrollViewBottomSpaceConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var lblAddAddress: UILabel! {
+    @IBOutlet private weak var lblAddAddress: UILabel! {
         didSet {
             lblAddAddress.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE)
         }
     }
     
-    var postalCodeString = String("")
+    private var postalCodeString = String("")
     
-    @IBOutlet weak var postalCodeTextField: UITextField! {
+    @IBOutlet private weak var postalCodeTextField: UITextField! {
         didSet {
             postalCodeTextField.backgroundColor = .clear
             postalCodeTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
@@ -43,7 +43,7 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBOutlet weak var buildingNameTextField: UITextField! {
+    @IBOutlet private weak var buildingNameTextField: UITextField! {
         didSet {
             buildingNameTextField.backgroundColor = .clear
             buildingNameTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
@@ -51,21 +51,21 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBOutlet weak var floorNoTextField: UITextField! {
+    @IBOutlet private weak var floorNoTextField: UITextField! {
         didSet {
             floorNoTextField.backgroundColor = .clear
             floorNoTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var unitNoTextField: UITextField! {
+    @IBOutlet private weak var unitNoTextField: UITextField! {
         didSet {
             unitNoTextField.backgroundColor = .clear
             unitNoTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var saveAsTextField: UITextField! {
+    @IBOutlet private weak var saveAsTextField: UITextField! {
         didSet {
             saveAsTextField.backgroundColor = .clear
             saveAsTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
@@ -73,22 +73,22 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBOutlet weak var additionalNotesTextField: UITextField! {
+    @IBOutlet private weak var additionalNotesTextField: UITextField! {
         didSet {
             additionalNotesTextField.backgroundColor = .clear
             additionalNotesTextField.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var otherTextFieldsStackView: UIStackView! {
+    @IBOutlet private weak var otherTextFieldsStackView: UIStackView! {
         didSet {
             otherTextFieldsStackView.isHidden = true
         }
     }
     
-    @IBOutlet var lblTitlesForTextFileds: [UILabel]!
+    @IBOutlet private var lblTitlesForTextFileds: [UILabel]!
     
-    var customMapView: CustomMapView!
+    private var customMapView: CustomMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,7 +126,7 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     
-    @objc func addBottomLineForAllTextFields() {
+    @objc private func addBottomLineForAllTextFields() {
         
         addBottomLineForTextField(postalCodeTextField)
         addBottomLineForTextField(buildingNameTextField)
@@ -136,7 +136,7 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         addBottomLineForTextField(additionalNotesTextField)
     }
     
-    func addBottomLineForTextField(_ textField: UITextField) {
+    private func addBottomLineForTextField(_ textField: UITextField) {
         
         textField.backgroundColor = .clear
         textField.delegate = self
@@ -185,7 +185,7 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         self.perform(#selector(removePreviousLayer(_:)), with: bottomLayer, afterDelay: duration)
     }
     
-    @objc func removePreviousLayer(_ bottomLayer: CALayer) {
+    @objc private func removePreviousLayer(_ bottomLayer: CALayer) {
         
         bottomLayer.removeFromSuperlayer()
     }
@@ -257,13 +257,15 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    func checkPostalcCodeValid() {
+    private func checkPostalcCodeValid() {
         
         let dictPrams: [String:Any] = ["zipcode" : postalCodeString]
         
         let URLString = WebServices.BASE_URL+WebServices.POSTALCODE_SERVICEABLE
         
-        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {(error, responseObject, data) in
+        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
             
             guard let responseObject = responseObject else { return }
             
@@ -315,13 +317,13 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
-    func updateMapView(with validPostalCodeModel:ValidPostalCodeModel) {
+    private func updateMapView(with validPostalCodeModel:ValidPostalCodeModel) {
         customMapView.clearAllMarkers()
         customMapView.showCustomerMarkerOnTheMap(with: Double(validPostalCodeModel.lat!)!, longitude: Double(validPostalCodeModel.lon!)!)
         customMapView.focusMapToShowAllMarkers()
     }
     
-    @objc func keyboardWillChange(_ notif:Notification) {
+    @objc private func keyboardWillChange(_ notif:Notification) {
         
         guard let userInfo = notif.userInfo else { return }
         
@@ -363,12 +365,12 @@ class AddAddressViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    @IBAction func saveButtonPressed(_ sender: UIButton) {
+    @IBAction private func saveButtonPressed(_ sender: UIButton) {
         
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func cancelButtonPressed(_ sender: UIButton) {
+    @IBAction private func cancelButtonPressed(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
     

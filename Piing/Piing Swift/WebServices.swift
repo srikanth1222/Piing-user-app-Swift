@@ -27,6 +27,10 @@ struct WebServices {
     public static let GET_DELIVERY_DATES_AND_TIMESLOTS = "order/deliverydates"
     public static let GET_ADDRESS = "address/get"
     public static let POSTALCODE_SERVICEABLE = "address/serviceable"
+    public static let GET_PAYMENT = "payment/getallpaymentmethods"
+    public static let ORDER_BOOKING_AVAILABLE = "order/orderbookingavailable"
+    public static let GET_ETA = "order/eta"
+    
     
     public static func serviceCall (withURLString urlString:String, parameters: [String : Any], completionHandler: @escaping (Error?, Any?, Data?) -> ()) {
         
@@ -62,7 +66,7 @@ struct WebServices {
                 }
             }
             else {
-                
+                AppDelegate.showAlertViewWith(message: error!.localizedDescription, title: "", actionTitle: "OK")
                 print(error!)
             }
         }.resume()

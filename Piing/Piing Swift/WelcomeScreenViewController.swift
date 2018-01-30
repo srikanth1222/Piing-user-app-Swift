@@ -8,11 +8,11 @@
 
 import UIKit
 import AVKit
-
+import DeckTransition
 
 class WelcomeScreenViewController: UIViewController {
 
-    @IBOutlet weak var bottomView: UIView! {
+     @IBOutlet private weak var bottomView: UIView! {
         didSet {
             
             bottomView.backgroundColor = .clear
@@ -43,14 +43,14 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var signupButton: UIButton! {
+    @IBOutlet private weak var signupButton: UIButton! {
         
         didSet{
             signupButton.titleLabel?.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var loginButton: UIButton! {
+    @IBOutlet private weak var loginButton: UIButton! {
         
         didSet {
             
@@ -59,11 +59,11 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var personTypeView: UIView!
+    @IBOutlet private weak var personTypeView: UIView!
     
-    @IBOutlet weak var personTypeBottomSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var personTypeBottomSpaceConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var nextButton: UIButton! {
+    @IBOutlet private weak var nextButton: UIButton! {
         
         didSet {
             
@@ -73,7 +73,7 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var backButton: UIButton! {
+    @IBOutlet private weak var backButton: UIButton! {
         
         didSet {
             
@@ -82,27 +82,28 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var lblResident: UILabel! {
+    @IBOutlet private weak var lblResident: UILabel! {
         didSet{
             lblResident.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var lblTourist: UILabel! {
+    @IBOutlet private weak var lblTourist: UILabel! {
         didSet{
             lblTourist.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
         }
     }
     
-    @IBOutlet weak var lblWho: UILabel! {
+    @IBOutlet private weak var lblWho: UILabel! {
         didSet{
             lblWho.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)
         }
     }
     
-    @IBOutlet weak var residentButton: UIButton!
-    @IBOutlet weak var touristButton: UIButton!
+    @IBOutlet private weak var residentButton: UIButton!
+    @IBOutlet private weak var touristButton: UIButton!
     
+    private var viewTransperent = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,9 +148,7 @@ class WelcomeScreenViewController: UIViewController {
         return true
     }
     
-    var viewTransperent = UIView()
-    
-    @IBAction func signupButtonPressed(_ sender: UIButton) {
+    @IBAction private func signupButtonPressed(_ sender: UIButton) {
         
         viewTransperent = UIView(frame: self.view.bounds)
         view.insertSubview(viewTransperent, belowSubview: personTypeView)
@@ -171,13 +170,13 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @objc func tappedOnPersonTypeView() {
+    @objc private func tappedOnPersonTypeView() {
         
         let btn = UIButton()
         backButtonPressed(btn)
     }
     
-    @IBAction func backButtonPressed(_ sender: UIButton) {
+    @IBAction private func backButtonPressed(_ sender: UIButton) {
         
         personTypeBottomSpaceConstraint.constant = self.view.frame.size.height
         
@@ -190,7 +189,7 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBAction func nextButtonPressed(_ sender: UIButton) {
+    @IBAction private func nextButtonPressed(_ sender: UIButton) {
         
         guard let registrationVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "RegistrationViewController") as? RegistrationViewController else { return }
         
@@ -210,20 +209,29 @@ class WelcomeScreenViewController: UIViewController {
         }
     }
     
-    @IBAction func loginButtonPressed(_ sender: UIButton) {
+    @IBAction private func loginButtonPressed(_ sender: UIButton) {
+        
+//        guard let loginVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+//        let transitionDelegate = DeckTransitioningDelegate()
+//        loginVC.transitioningDelegate = transitionDelegate
+//        loginVC.modalPresentationStyle = .custom
+//        present(loginVC, animated: true, completion: nil)
+//
+//        return
+        
         
         guard let loginVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-        
+
         UIView.transition(with: self.navigationController!.view, duration: 0.6, options: .transitionFlipFromRight, animations: {
-        
+
             self.navigationController?.pushViewController(loginVC, animated: false)
-            
+
         }) { (comepleted) in
-            
+
         }
     }
     
-    @IBAction func onPersonTypePressed(_ sender: UIButton) {
+    @IBAction private func onPersonTypePressed(_ sender: UIButton) {
         
         nextButton.isEnabled(true)
         

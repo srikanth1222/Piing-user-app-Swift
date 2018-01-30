@@ -11,6 +11,8 @@ target 'Piing Swift' do
   pod 'GooglePlaces'
   pod 'Alamofire', '~> 4.5'
   pod 'KWVerificationCodeView'
+  pod 'DeckTransition'
+  pod 'SwiftGifOrigin', '~> 1.6.1'
   
 end
 

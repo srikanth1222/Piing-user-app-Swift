@@ -16,13 +16,13 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         nextButton.isEnabled(verificationCustomView.hasValidCode())
     }
     
-    let selectedBorderWidth = CGFloat(1.3)
-    let borderWidth = CGFloat(1.0)
-    let duration = 0.2
+    private let selectedBorderWidth = CGFloat(1.3)
+    private let borderWidth = CGFloat(1.0)
+    private let duration = 0.2
     
     var personType: String = ""
     
-    @IBOutlet weak var nextButton: UIButton! {
+    @IBOutlet private weak var nextButton: UIButton! {
         
         didSet {
             
@@ -32,66 +32,66 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var nextButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var nextButtonBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var backButton: UIButton! {
+    @IBOutlet private weak var backButton: UIButton! {
         
         didSet {
             backButton.imageView?.contentMode = .scaleAspectFit
         }
     }
     
-    @IBOutlet weak var nameView: UIView! {
+    @IBOutlet private weak var nameView: UIView! {
         didSet{
             nameView.backgroundColor = .clear
         }
     }
     
-    @IBOutlet weak var emailView: UIView!  {
+    @IBOutlet private weak var emailView: UIView!  {
         didSet{
             emailView.backgroundColor = .clear
         }
     }
     
-    @IBOutlet weak var phoneView: UIView! {
+    @IBOutlet private weak var phoneView: UIView! {
         didSet{
             phoneView.backgroundColor = .clear
         }
     }
     
-    @IBOutlet weak var verificationView: UIView! {
+    @IBOutlet private weak var verificationView: UIView! {
         didSet{
             verificationView.backgroundColor = .clear
         }
     }
     
-    @IBOutlet weak var nameViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var nameViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var emailViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var emailViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var phoneViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var phoneViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var verificationViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var verificationViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var nameViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var nameViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var emailViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var emailViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var phoneViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var phoneViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var verificationViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var verificationViewLeadingConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var lblYourName: UILabel! {
+    @IBOutlet private weak var lblYourName: UILabel! {
         didSet {
             lblYourName.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)
         }
     }
     
-    @IBOutlet weak var lblLogin: UILabel! {
+    @IBOutlet private weak var lblLogin: UILabel! {
         didSet {
             lblLogin.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)
         }
     }
-    @IBOutlet weak var lblPhone: UILabel! {
+    @IBOutlet private weak var lblPhone: UILabel! {
         didSet {
             lblPhone.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)
         }
     }
     
-    @IBOutlet weak var firstNameTextField: UITextField! {
+    @IBOutlet private weak var firstNameTextField: UITextField! {
         didSet{
             firstNameTextField.backgroundColor = .clear
             firstNameTextField.text = ""
@@ -105,7 +105,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var lastNameTextField: UITextField! {
+    @IBOutlet private weak var lastNameTextField: UITextField! {
         didSet{
             lastNameTextField.backgroundColor = .clear
             lastNameTextField.text = ""
@@ -119,7 +119,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var emailTextField: UITextField! {
+    @IBOutlet private weak var emailTextField: UITextField! {
         didSet{
             emailTextField.backgroundColor = .clear
             emailTextField.text = ""
@@ -133,7 +133,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var passwordTextField: UITextField! {
+    @IBOutlet private weak var passwordTextField: UITextField! {
         didSet{
             passwordTextField.backgroundColor = .clear
             passwordTextField.text = ""
@@ -147,7 +147,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var phoneTextField: UITextField! {
+    @IBOutlet private weak var phoneTextField: UITextField! {
         didSet{
             phoneTextField.backgroundColor = .clear
             //phoneTextField.text = ""
@@ -163,19 +163,19 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @IBOutlet weak var lblEnterDigits: UILabel! {
+    @IBOutlet private weak var lblEnterDigits: UILabel! {
         didSet {
             lblEnterDigits.numberOfLines = 0
         }
     }
     
-    @IBOutlet weak var lblResendCode: UILabel! {
+    @IBOutlet private weak var lblResendCode: UILabel! {
         didSet {
             lblResendCode.font = UIFont.init(name: AppFont.APPFONT_LIGHT, size: AppDelegate.GLOBAL_FONT_SIZE-5)
         }
     }
     
-    @IBOutlet weak var verificationCustomView: KWVerificationCodeView! {
+    @IBOutlet private weak var verificationCustomView: KWVerificationCodeView! {
         didSet {
             verificationCustomView.delegate = self
             verificationCustomView.digits = 6
@@ -189,13 +189,13 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    var firstNameString = ""
-    var lastNameString = ""
-    var phoneNumberString = ""
-    var emailString = ""
-    var passwordString = ""
-    var verificationCodeString = ""
-    var passwordFirstCharacterAfterDidBeginEditing = false
+    private var firstNameString = ""
+    private var lastNameString = ""
+    private var phoneNumberString = ""
+    private var emailString = ""
+    private var passwordString = ""
+    private var verificationCodeString = ""
+    private var passwordFirstCharacterAfterDidBeginEditing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -222,7 +222,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     
-    @objc func addBottomLineForAllTextFields() {
+    @objc private func addBottomLineForAllTextFields() {
         
         nameViewTopConstraint.constant = AppDelegate.SCREEN_HEIGHT * 0.1
         emailViewTopConstraint.constant = AppDelegate.SCREEN_HEIGHT * 0.1
@@ -240,7 +240,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         addBottomLineForTextField(phoneTextField)
     }
     
-    func addBottomLineForTextField(_ textField: UITextField) {
+    private func addBottomLineForTextField(_ textField: UITextField) {
         
         textField.backgroundColor = .clear
         textField.delegate = self
@@ -254,7 +254,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
     }
     
     
-    @objc func keyboardWillChange(_ notif:Notification) {
+    @objc private func keyboardWillChange(_ notif:Notification) {
         
         guard let userInfo = notif.userInfo else { return }
         
@@ -352,7 +352,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    @objc func removePreviousLayer(_ bottomLayer: CALayer) {
+    @objc private func removePreviousLayer(_ bottomLayer: CALayer) {
         
         bottomLayer.removeFromSuperlayer()
     }
@@ -494,7 +494,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         return true
     }
     
-    @IBAction func nextButtonPressed(_ sender: UIButton) {
+    @IBAction private func nextButtonPressed(_ sender: UIButton) {
         if nameViewLeadingConstraint.constant == 0 {
             nameViewLeadingConstraint.constant = -AppDelegate.SCREEN_WIDTH
             emailViewLeadingConstraint.constant = 0
@@ -555,7 +555,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         }
     }
     
-    func prepareLabelPhoneNumber() {
+    private func prepareLabelPhoneNumber() {
         
         let strDigit = "Enter the 6 digit code sent to "
         let strNumber = self.phoneNumberString
@@ -571,7 +571,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         self.lblEnterDigits.attributedText = attrDigit
     }
     
-    func registrationServiceCalled() {
+    private func registrationServiceCalled() {
         
         //    NSDictionary *dictReg = [NSMutableDictionary dictionaryWithObjectsAndKeys:registerFeilds.emailAddress, @"email", registerFeilds.password, @"password", registerFeilds.firstName,@"name", registerFeilds.cellPhone, @"phone", @"IOS", @"source", registerFeilds.referalCode, @"referCode", registerFeilds.extn_Number, @"roomExtensionNo", [[NSUserDefaults standardUserDefaults] objectForKey:IS_TOURIST], @"userType", @"000000", @"zipcode", nil];
         
@@ -579,8 +579,11 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         let dictPrams:[String:Any] = ["email" : emailString, "password" : passwordString, "firstname" : firstNameString, "lastname" : lastNameString, "phone" : phoneNumberString, "source" : "IOS", "referCode" : "", "userType" : "", "zipcode" : "000000", "roomExtensionNo" : ""]
         
         let loginService = WebServices.BASE_URL+WebServices.LOGIN_SERVICE
-        WebServices.serviceCall(withURLString: loginService, parameters: dictPrams, completionHandler: { (error, responseObject, data) in
+        
+        WebServices.serviceCall(withURLString: loginService, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
             
+            guard case self? = weakSelf else { return }
+
             guard let responseObject = responseObject else { return }
             
             print (responseObject)
@@ -620,7 +623,7 @@ class RegistrationViewController: UIViewController, UITextFieldDelegate, KWVerif
         return true
     }
     
-    @IBAction func backButtonPressed(_ sender: UIButton) {
+    @IBAction private func backButtonPressed(_ sender: UIButton) {
         
         if nameViewLeadingConstraint.constant == 0 {
             

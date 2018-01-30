@@ -8,21 +8,65 @@
 
 import UIKit
 import GoogleMaps
+import SwiftGifOrigin
+
+
+enum ServiceType : String {
+    case UNKNOWN
+    case LOADWASH = "WF"
+    case DRYCLEANING = "DC"
+    case WASHIRON = "WI"
+    case IRONING = "IR"
+    case GREEN_DRYCLEANING = "DCG"
+    case BAGS = "BAG"
+    case SHOE_CLEANING = "SHOECL"
+    case SHOE_POLISHING = "SHOEPO"
+    case LEATHER = "LE"
+    case CARPET = "CA"
+    case CURTAIN_WITH_DRYCLEANIG = "CC_W_DC"
+    case CURTAIN_WITHOUT_DRYCLEANIG = "CC_DC"
+}
 
 
 class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressViewControllerDelegate {
     
-    var customMapView: CustomMapView!
+    enum ServiceTypeTag : Int {
+        case LOADWASH_TAG = 1
+        case DRYCLEANING_TAG = 2
+        case WASHIRON_TAG = 3
+        case IRONING_TAG = 4
+        case GREEN_DRYCLEANING_TAG = 5
+        case BAGS_TAG = 6
+        case SHOE_CLEANING_TAG = 7
+        case SHOE_POLISHING_TAG = 8
+        case LEATHER_TAG = 9
+        case CURTAIN_TAG = 10
+        case CARPET_TAG = 11
+    }
     
-    @IBOutlet weak var addressView: UIView!
+    var serviceType = ServiceType.UNKNOWN
     
-    @IBOutlet weak var addressViewTopSpace: NSLayoutConstraint! {
+    @IBOutlet weak var topDropdownButton: UIButton! {
         didSet {
-            addressViewTopSpace.constant = -addressView.frame.size.height
+            topDropdownButton.imageView?.contentMode = .scaleAspectFit
+            let insetValue:CGFloat = 15
+            topDropdownButton.imageEdgeInsets = UIEdgeInsetsMake(insetValue/2, insetValue, insetValue, insetValue)
         }
     }
     
-    @IBOutlet weak var deliveryAddressStackView: UIStackView! {
+    @IBOutlet weak var containerViewAvailableTime: UIView!
+    
+    private  var customMapView: CustomMapView!
+    
+    @IBOutlet private weak var addressView: UIView!
+    
+    @IBOutlet private weak var addressViewTopSpace: NSLayoutConstraint! {
+        didSet {
+            //addressViewTopSpace.constant = -addressView.frame.size.height
+        }
+    }
+    
+    @IBOutlet private weak var deliveryAddressStackView: UIStackView! {
         
         didSet {
             // Intialize Tap Gesture for Delivery Address Stack View
@@ -31,7 +75,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         }
     }
     
-    @IBOutlet weak var pickupAddressStackView: UIStackView! {
+    @IBOutlet private weak var pickupAddressStackView: UIStackView! {
         
         didSet {
             // Intialize Tap Gesture for Pickup Address Stack View
@@ -40,89 +84,101 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         }
     }
     
-    @IBOutlet weak var topGradientEffectImageView: UIImageView!
-    @IBOutlet weak var topGradientFromTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var topGradientHeightConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var addressViewBottomConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var bottomGradientEffectImageView: UIImageView!
-    @IBOutlet weak var lblPickupAddress: UILabel!
-    @IBOutlet weak var lblPickupLaneAddress: UILabel!
-    
-    @IBOutlet weak var lblDeliveryAddress: UILabel!
-    @IBOutlet weak var lblDeliveryLaneAddress: UILabel!
-    
-    @IBOutlet weak var upArrowIcon: UIImageView!
-    @IBOutlet weak var downArrowIcon: UIImageView!
-    
-    @IBOutlet weak var servicesView: UIView!
-    
-    @IBOutlet weak var scrollViewServices: UIScrollView! 
-    @IBOutlet weak var scrollViewServicesTitle: UIScrollView!
-    
-    @IBOutlet weak var personalCareView: UIView!
-    @IBOutlet weak var personalCaremultiplier: NSLayoutConstraint!
-    @IBOutlet weak var personalCareStackView: UIStackView!
-    @IBOutlet weak var ironingStackView: UIStackView!
-    @IBOutlet weak var washIronStackView: UIStackView!
-    @IBOutlet weak var dryCleaningStackView: UIStackView!
-    @IBOutlet weak var loadWashStackView: UIStackView!
-    
-    @IBOutlet weak var loadWashBtn: UIButton!
-    @IBOutlet weak var dryCleaningBtn: UIButton!
-    @IBOutlet weak var washIronBtn: UIButton!
-    @IBOutlet weak var ironingBtn: UIButton!
-    @IBOutlet weak var bagsBtn: UIButton!
-    @IBOutlet weak var shoesBtn: UIButton!
-    @IBOutlet weak var leatherBtn: UIButton!
-    @IBOutlet weak var curtainsBtn: UIButton!
-    @IBOutlet weak var carpetBtn: UIButton!
-    
-    
-    @IBOutlet weak var lblLoadWash: UILabel!
-    @IBOutlet weak var lblDryCleaning: UILabel!
-    @IBOutlet weak var lblWashIron: UILabel!
-    @IBOutlet weak var lblIroning: UILabel!
-    @IBOutlet weak var lblBags: UILabel!
-    @IBOutlet weak var lblShoes: UILabel!
-    @IBOutlet weak var lblLeather: UILabel!
-    @IBOutlet weak var lblCurtain: UILabel!
-    @IBOutlet weak var lblCarpet: UILabel!
-    
-    @IBOutlet weak var hexagonImageViewButton: UIButton! {
-        
+    @IBOutlet private weak var topGradientEffectImageView: UIImageView! {
         didSet {
-            hexagonImageViewButton.imageView?.contentMode = .scaleAspectFit
+            topGradientEffectImageView.backgroundColor = .clear
         }
     }
     
-    @IBOutlet weak var pickupDateAndTimeButton: UIButton! {
+    @IBOutlet private weak var topGradientFromTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var topGradientHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet private weak var addressViewBottomConstraint: NSLayoutConstraint!
+    
+    @IBOutlet private weak var bottomGradientEffectImageView: UIImageView! {
+        didSet {
+            bottomGradientEffectImageView.backgroundColor = .clear
+        }
+    }
+    
+    @IBOutlet private weak var lblPickupAddress: UILabel!
+    @IBOutlet private weak var lblPickupLaneAddress: UILabel!
+    
+    @IBOutlet private weak var lblDeliveryAddress: UILabel!
+    @IBOutlet private weak var lblDeliveryLaneAddress: UILabel!
+    
+    @IBOutlet private weak var upArrowIcon: UIImageView!
+    @IBOutlet private weak var downArrowIcon: UIImageView!
+    
+    @IBOutlet private weak var servicesView: UIView!
+    
+    @IBOutlet private weak var scrollViewServices: UIScrollView!
+    @IBOutlet private weak var scrollViewServicesTitle: UIScrollView!
+    
+    @IBOutlet private weak var personalCareView: UIView!
+    @IBOutlet private weak var personalCaremultiplier: NSLayoutConstraint!
+    @IBOutlet private weak var personalCareStackView: UIStackView!
+    @IBOutlet private weak var ironingStackView: UIStackView!
+    @IBOutlet private weak var washIronStackView: UIStackView!
+    @IBOutlet private weak var dryCleaningStackView: UIStackView!
+    @IBOutlet private weak var loadWashStackView: UIStackView!
+    
+    @IBOutlet private weak var loadWashBtn: UIButton!
+    @IBOutlet private weak var dryCleaningBtn: UIButton!
+    @IBOutlet private weak var washIronBtn: UIButton!
+    @IBOutlet private weak var ironingBtn: UIButton!
+    @IBOutlet private weak var bagsBtn: UIButton!
+    @IBOutlet private weak var shoesBtn: UIButton!
+    @IBOutlet private weak var leatherBtn: UIButton!
+    @IBOutlet private weak var curtainsBtn: UIButton!
+    @IBOutlet private weak var carpetBtn: UIButton!
+    
+    
+    @IBOutlet private weak var lblLoadWash: UILabel!
+    @IBOutlet private weak var lblDryCleaning: UILabel!
+    @IBOutlet private weak var lblWashIron: UILabel!
+    @IBOutlet private weak var lblIroning: UILabel!
+    @IBOutlet private weak var lblBags: UILabel!
+    @IBOutlet private weak var lblShoes: UILabel!
+    @IBOutlet private weak var lblLeather: UILabel!
+    @IBOutlet private weak var lblCurtain: UILabel!
+    @IBOutlet private weak var lblCarpet: UILabel!
+    
+    @IBOutlet private weak var hexagonImageViewGif: UIImageView! {
+        didSet {
+            let hexagonGif = UIImage.gif(name: "hexagon_gif")
+            hexagonImageViewGif.image = hexagonGif
+        }
+    }
+    
+    @IBOutlet private weak var pickupDateAndTimeButton: UIButton! {
         
         didSet {
             // Setting Pickup date and time
             
             pickupDateAndTimeButton.titleLabel?.numberOfLines = 2
-            //lblPickupDateAndTime.backgroundColor = .red
-            
-            let strPickupDate = "PICKUP DATE : TIME"
-            let strPickupTime = "\nNEXT PICKUP 3 - 4 PM"
-            
-            let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!]
-            let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!]
-            
-            let attrPickupDate = NSMutableAttributedString(string: strPickupDate, attributes: attrKeyPickupDate)
-            let attrPickupTime = NSMutableAttributedString(string: strPickupTime, attributes: attrKeyPickupTime)
-            
-            attrPickupDate.append(attrPickupTime)
-            
-            pickupDateAndTimeButton.setAttributedTitle(attrPickupDate, for: .normal)
-            
             pickupDateAndTimeButton.imageView?.contentMode = .scaleAspectFit
+            
+            setupDateTimeLabel("")
         }
     }
     
-    @IBOutlet weak var dateTimeView: UIView! {
+    func setupDateTimeLabel(_ time: String) {
+        let strPickupDate = "PICKUP DATE : TIME"
+        let strPickupTime = "\nNEXT PICKUP 3 - 4 PM"
+        
+        let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!]
+        let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!]
+        
+        let attrPickupDate = NSMutableAttributedString(string: strPickupDate, attributes: attrKeyPickupDate)
+        let attrPickupTime = NSMutableAttributedString(string: strPickupTime, attributes: attrKeyPickupTime)
+        
+        attrPickupDate.append(attrPickupTime)
+        
+        pickupDateAndTimeButton.setAttributedTitle(attrPickupDate, for: .normal)
+    }
+    
+    @IBOutlet private weak var dateTimeView: UIView! {
         
         didSet {
             // Intialize Tap Gesture for Pickup date and time slot View
@@ -131,19 +187,70 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         }
     }
     
-    @IBOutlet weak var dateTimeViewBottomSpace: NSLayoutConstraint! {
+    @IBOutlet private weak var dateTimeViewBottomSpace: NSLayoutConstraint!
+    
+    private var btnGreenDC: UIButton!
+    
+    private lazy var greenDCStackView : UIStackView = {
         
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        
+        btnGreenDC = UIButton(type: .custom)
+        btnGreenDC.tag = ServiceTypeTag.GREEN_DRYCLEANING_TAG.rawValue
+        btnGreenDC.setImage(UIImage.init(named: "wash_iron"), for: .normal)
+        btnGreenDC.imageView!.contentMode = .scaleAspectFit
+        btnGreenDC.addTarget(self, action: #selector(serviceTypeButtonPressed(_:)), for: .touchUpInside)
+        
+        btnGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 749), for: .vertical)
+        
+        let aspectRatioConstraint = NSLayoutConstraint(item: btnGreenDC, attribute: .height, relatedBy: .equal, toItem: btnGreenDC, attribute: .width, multiplier: (1.0 / 1.0),constant: 0)
+        btnGreenDC.addConstraint(aspectRatioConstraint)
+        
+        let lblGreenDC = UILabel()
+        let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
+        let attrIroning = NSAttributedString(string: "Green DryCleaning".uppercased(), attributes: attrKeyIroning)
+        
+        lblGreenDC.attributedText = attrIroning
+        lblGreenDC.minimumScaleFactor = 0.5
+        
+        lblGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 751), for: .vertical)
+        lblGreenDC.setContentHuggingPriority(UILayoutPriority.init(rawValue: 1000), for: .vertical)
+        
+        stackView.addArrangedSubview(btnGreenDC)
+        stackView.addArrangedSubview(lblGreenDC)
+        
+        self.personalCareStackView.insertArrangedSubview(stackView, at: 2)
+        stackView.isHidden = true
+        
+        return stackView
+    }()
+    
+    @IBOutlet weak var locationPointer: UIButton! {
         didSet {
-            dateTimeViewBottomSpace.constant = -(dateTimeView.frame.size.height + addressView.frame.size.height)
+            locationPointer.alpha = 0
         }
     }
     
-    var greenDCTSTackView = UIStackView()
+    private var orderSummeryObject = OrderSummeryModel()
     
-    var responseObject: ResponseModel?
-    var addressArray : [AddressModel]?
-    var selectedPickupAddressModel: AddressModel?
-    var selectedDeliveryAddressModel: AddressModel?
+    @IBAction func dropdownButtonPressed(_ sender: UIButton) {
+        
+        let dealsVC = self.parent as! DealsViewController
+        
+        let tap = UITapGestureRecognizer()
+        dealsVC.tappedOnHomePage(tap)
+    }
+    
+    @IBAction func locationPointerPressed(_ sender: UIButton) {
+        customMapView.focusMapToShowAllMarkers()
+        
+        UIView.animate(withDuration: 0.2) {
+            self.locationPointer.alpha = 0
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,55 +258,105 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         view.backgroundColor = .white
         
-        customMapView = CustomMapView(frame: CGRect(x: 0.0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+        view.bringSubview(toFront: containerViewAvailableTime)
+        
+        customMapView = CustomMapView()
         self.view.addSubview(customMapView)
+        
+        customMapView.translatesAutoresizingMaskIntoConstraints = false
+        
+//        NSLayoutConstraint(item: customMapView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: customMapView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: customMapView, attribute: .top, relatedBy: .equal, toItem: addressView, attribute: .bottom, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: customMapView, attribute: .bottom, relatedBy: .equal, toItem: servicesView, attribute: .top, multiplier: 1, constant: 0).isActive = true
+        
+        [
+            customMapView.topAnchor.constraint(equalTo: addressView.bottomAnchor, constant: 0),
+            customMapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            customMapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            customMapView.bottomAnchor.constraint(equalTo: servicesView.topAnchor, constant: 0),
+            ].forEach { ($0.isActive = true) }
+        
+        customMapView.mapView.delegate = self
+        
         customMapView.perform(#selector(customMapView.animateMapView), with: nil, afterDelay: 1.5)
         
-        let addressURLString = WebServices.BASE_URL+WebServices.GET_ADDRESS
+        orderSummeryObject = AppDelegate.orderSummeryObject
         
-        WebServices.serviceCall(withURLString: addressURLString, parameters: AppDelegate.constantDictValues) { (error, responseObject, data) in
+        setupUI()
+        //self.perform(#selector(self.setupUI), with: nil, afterDelay: 1.5)
+        
+        //checkBookingAvailable()
+    }
+    
+    func checkBookingAvailable() {
+        
+        let bookingAvailableURL = WebServices.BASE_URL+WebServices.ORDER_BOOKING_AVAILABLE
+        
+        WebServices.serviceCall(withURLString: bookingAvailableURL, parameters: AppDelegate.constantDictValues, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
             
             guard let responseObject = responseObject else { return }
             
             print (responseObject)
             
-            guard let data = data else { return }
+            let bookingResponse = responseObject as! Dictionary<String, Any>
             
-            do {
+            let dict1 = bookingResponse["order"] as! Dictionary<String, Any>
+            
+            if dict1["bookNow"] as! Bool == true {
                 
-                self.responseObject = try JSONDecoder().decode(ResponseModel.self, from: data)
-                
-                print (self.responseObject as Any)
-                
-                if self.responseObject?.s == 100 {
-                    AppDelegate.logoutFromTheApp()
-                    return
-                }
-                
-                self.perform(#selector(self.setupUI), with: nil, afterDelay: 1.5)
-                
-                //self.setupUI()
-                
-            }  catch let jsonDecodeErr {
-                
-                print("Error while parsing addresses: \(jsonDecodeErr)")
+                self.getNextAvailableTimeslot()
             }
-        }
+        })
     }
     
-    @objc func setupUI() {
+    func getNextAvailableTimeslot() {
+        let bookingAvailableURL = WebServices.BASE_URL+WebServices.GET_ETA
+        
+        
+        
+        WebServices.serviceCall(withURLString: bookingAvailableURL, parameters: AppDelegate.constantDictValues, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
+            
+            guard let responseObject = responseObject else { return }
+            
+            print (responseObject)
+            
+            let bookingResponse = responseObject as! Dictionary<String, Any>
+            
+            let dict1 = bookingResponse["order"] as! Dictionary<String, Any>
+            
+            if dict1["bookNow"] as! Bool == true {
+                
+                self.getNextAvailableTimeslot()
+            }
+        })
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
+    }
+    
+   
+    
+    @objc private func setupUI() {
         
         self.view.insertSubview(customMapView, at: 0)
         
-        dateTimeViewBottomSpace.constant = 0
-        addressViewTopSpace.constant = 0
+        //dateTimeViewBottomSpace.constant = 0
+        //addressViewTopSpace.constant = 0
         
         addressView.backgroundColor = .white
+        //topGradientEffectImageView.backgroundColor = UIColor.red.withAlphaComponent(0.4)
         topGradientEffectImageView.backgroundColor = .clear
-//        topGradientEffectImageView.backgroundColor = .red
 //        topGradientEffectImageView.image = nil
         topGradientEffectImageView.isUserInteractionEnabled = false
         
+        //bottomGradientEffectImageView.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
         bottomGradientEffectImageView.backgroundColor = .clear
         
         UIView.animate(withDuration: 0.3, animations: {
@@ -210,11 +367,10 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             
             let getPickupStackFrame = self.pickupAddressStackView.convert(self.pickupAddressStackView.bounds, to: self.view)
             
-            self.topGradientFromTopConstraint.constant = getPickupStackFrame.origin.y - AppDelegate.safeAreaTopInset()
-            
-            self.topGradientHeightConstraint.constant = getPickupStackFrame.size.height * 2
+            self.topGradientFromTopConstraint.constant = getPickupStackFrame.origin.y
+            self.topGradientHeightConstraint.constant = getPickupStackFrame.size.height
             self.addressViewBottomConstraint.constant = -self.deliveryAddressStackView.frame.size.height
-            self.addressView.backgroundColor = .clear
+            //self.addressView.backgroundColor = .clear
             self.perform(#selector(self.changeCustomMapViewFrame), with: nil, afterDelay: 0.3)
             
             self.scrollViewServicesTitle.setContentOffset(CGPoint(x: (-self.view.frame.size.width * 0.17) + (self.scrollViewServices.contentOffset.x * 0.65), y: 0), animated: true)
@@ -229,24 +385,21 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         // Setting Pickup address
         settingUpPickupAndDeliveryAddress()
         
-        hexagonImageViewButton.imageEdgeInsets = UIEdgeInsetsMake(hexagonImageViewButton.frame.size.height * 0.1, 0, hexagonImageViewButton.frame.size.height * 0.1, 0)
-        
         pickupDateAndTimeButton.titleEdgeInsets = UIEdgeInsetsMake(0, -pickupDateAndTimeButton.frame.size.width * 0.18, 0, 0)
         pickupDateAndTimeButton.imageEdgeInsets = UIEdgeInsetsMake(pickupDateAndTimeButton.frame.size.height * 0.28, 0, pickupDateAndTimeButton.frame.size.height * 0.28, -pickupDateAndTimeButton.frame.size.width * 0.05)
     }
     
-    @objc func changeCustomMapViewFrame() {
-        self.customMapView.frame = CGRect(x: 0.0, y: self.topGradientEffectImageView.frame.origin.y + self.topGradientEffectImageView.frame.size.height / 2, width: self.view.frame.size.width, height: servicesView.frame.origin.y - (self.topGradientEffectImageView.frame.origin.y + 20))
+    @objc private func changeCustomMapViewFrame() {
+        
+        //self.customMapView.frame = CGRect(x: 0.0, y: self.topGradientEffectImageView.frame.origin.y + self.topGradientEffectImageView.frame.size.height / 2, width: self.view.frame.size.width, height: servicesView.frame.origin.y - (self.topGradientEffectImageView.frame.origin.y + 20))
     }
     
-    func settingUpPickupAndDeliveryAddress() {
+    private func settingUpPickupAndDeliveryAddress() {
         
         lblPickupAddress.numberOfLines = 0
         lblPickupLaneAddress.numberOfLines = 1
         
-        addressArray = self.responseObject?.addresses
-        
-        let addressArrayWithDefault = addressArray?.filter({$0.`default`!})
+        let addressArrayWithDefault = orderSummeryObject.addressArray?.filter({$0.`default`!})
         
         var addressModel1: AddressModel? = nil
         
@@ -262,16 +415,16 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         guard let addressModel = addressModel1 else { return }
         
-        selectedPickupAddressModel = addressModel
-        selectedDeliveryAddressModel = selectedPickupAddressModel
+        orderSummeryObject.selectedPickupAddressModel = addressModel
+        orderSummeryObject.selectedDeliveryAddressModel = orderSummeryObject.selectedPickupAddressModel
         
-        customMapView.showCustomerMarkerOnTheMap(with: selectedPickupAddressModel!)
+        customMapView.showCustomerMarkerOnTheMap(with: orderSummeryObject.selectedPickupAddressModel!)
         customMapView.focusMapToShowAllMarkers()
         
         setupPickupAddress()
     }
     
-    func setupPickupAddress() {
+    private func setupPickupAddress() {
         
         upArrowIcon.isHidden = false
         downArrowIcon.isHidden = false
@@ -280,11 +433,11 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         let strPickupAddrText = "PICKUP"
         
-        guard var strIsHome = selectedPickupAddressModel?.name else { return }
+        guard var strIsHome = orderSummeryObject.selectedPickupAddressModel?.name else { return }
         
         strIsHome = "  @ " + strIsHome.uppercased()
         
-        var strLaneAddr = AppDelegate.getAddressDescription(selectedPickupAddressModel!)
+        var strLaneAddr = AppDelegate.getAddressDescription(orderSummeryObject.selectedPickupAddressModel!)
         
         strLaneAddr = strLaneAddr.lowercased().capitalizingFirstLetter()
         
@@ -298,7 +451,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         
         let attrPickupAddrText = NSMutableAttributedString(string: strPickupAddrText, attributes: attrKeyPickupAddrText)
         
-        if selectedPickupAddressModel?._id == selectedDeliveryAddressModel?._id {
+        if orderSummeryObject.selectedPickupAddressModel?._id == orderSummeryObject.selectedDeliveryAddressModel?._id {
             
             let strSeparator = " |  "
             let strDeliveryAddrText = "DELIVERY"
@@ -311,6 +464,9 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             attrPickupAddrText.append(attrSeparator)
             attrPickupAddrText.append(attrDeliveryAddrText)
         }
+        else {
+            setupDeliveryAddress()
+        }
         
         let attrIsHome = NSMutableAttributedString(string: strIsHome, attributes: attrKeyIsHome)
         let attrLaneAddr = NSMutableAttributedString(string: strLaneAddr, attributes: attrKeyLaneAddr)
@@ -322,7 +478,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         //lblPickupLaneAddress.backgroundColor = .red
     }
     
-    func setupDeliveryAddress() {
+    private func setupDeliveryAddress() {
         
         upArrowIcon.isHidden = false
         downArrowIcon.isHidden = true
@@ -333,9 +489,9 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         lblDeliveryLaneAddress.numberOfLines = 1
         
         let strDeliveryAddrText = "DELIVERY"
-        let strIsHome = " @ " + (selectedDeliveryAddressModel?.name!)!.uppercased()
+        let strIsHome = " @ " + (orderSummeryObject.selectedDeliveryAddressModel?.name!)!.uppercased()
         
-        var strLaneAddr = AppDelegate.getAddressDescription(selectedDeliveryAddressModel!)
+        var strLaneAddr = AppDelegate.getAddressDescription(orderSummeryObject.selectedDeliveryAddressModel!)
         
         strLaneAddr = strLaneAddr.lowercased().capitalizingFirstLetter()
         
@@ -355,7 +511,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         lblDeliveryLaneAddress.attributedText = attrLaneAddr
     }
     
-    func settingUpServiceTypeLabels() {
+    private func settingUpServiceTypeLabels() {
         
         loadWashBtn.imageView!.contentMode = .scaleAspectFit
         dryCleaningBtn.imageView!.contentMode = .scaleAspectFit
@@ -423,7 +579,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         lblCarpet.minimumScaleFactor = 0.5
     }
     
-    func changeTopGradientMultiplierConstraint(With multiplier: CGFloat) {
+    private func changeTopGradientMultiplierConstraint(With multiplier: CGFloat) {
         
         let newTopConstraint = self.topGradientFromTopConstraint.constraintWithMultiplier(multiplier)
         self.view!.removeConstraint(self.topGradientFromTopConstraint)
@@ -431,7 +587,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         self.topGradientFromTopConstraint = newTopConstraint
     }
     
-    func settingUpServiceTypeHeaderLabels() {
+    private func settingUpServiceTypeHeaderLabels() {
         
         let arrayServicesTitle = ["GARMENTS & LINEN", "BAGS SHOES & MORE", "CURTAINS & CARPETS"]
         
@@ -466,29 +622,25 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         //scrollViewServicesTitle.backgroundColor = .red
     }
     
-    @objc func tappedOnPickupAddressStackView()
+    @objc private func tappedOnPickupAddressStackView()
     {
         print("Tapped on pickup address stack view")
         
         guard let showAddress = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "ShowAddressViewController") as? ShowAddressViewController else { return }
-        showAddress.addressArray = addressArray
-        showAddress.pickupAddressModel = selectedPickupAddressModel
-        showAddress.deliveryAddressModel = selectedDeliveryAddressModel
+        showAddress.orderSummeryObject = orderSummeryObject
         showAddress.delegate = self
-        
+            
         let navShowAddrVC = UINavigationController(rootViewController: showAddress)
         navShowAddrVC.isNavigationBarHidden = true
         present(navShowAddrVC, animated: true, completion: nil)
     }
     
-    @objc func tappedOnDeliveryAddressStackView()
+    @objc private func tappedOnDeliveryAddressStackView()
     {
         print("Tapped on delivery address stack view")
         
         guard let showAddress = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "ShowAddressViewController") as? ShowAddressViewController else { return }
-        showAddress.addressArray = addressArray
-        showAddress.pickupAddressModel = selectedPickupAddressModel
-        showAddress.deliveryAddressModel = selectedDeliveryAddressModel
+        showAddress.orderSummeryObject = orderSummeryObject
         showAddress.delegate = self
         
         let navShowAddrVC = UINavigationController(rootViewController: showAddress)
@@ -497,12 +649,157 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     }
     
     
-    @objc func tappedOnPickupDatesView()
+    @IBAction private func serviceTypeButtonPressed(_ sender: UIButton) {
+        
+        let tag = sender.tag
+        
+        let serviceTypeTag = ServiceTypeTag(rawValue: tag)
+        
+        sender.isSelected = !sender.isSelected
+        
+        switch serviceTypeTag {
+            
+        case .LOADWASH_TAG?:
+            serviceType = ServiceType.LOADWASH
+            break
+        case .DRYCLEANING_TAG?:
+            //serviceType = ServiceType.DRYCLEANING
+            
+            handlingDryCleaning()
+            
+            break
+        case .GREEN_DRYCLEANING_TAG?:
+            
+            greenDCSelected()
+            //serviceType = ServiceType.GREEN_DRYCLEANING
+            break
+        case .WASHIRON_TAG?:
+            serviceType = ServiceType.WASHIRON
+            break
+        case .IRONING_TAG?:
+            serviceType = ServiceType.IRONING
+            break
+        case .BAGS_TAG?:
+            serviceType = ServiceType.BAGS
+            break
+        case .SHOE_CLEANING_TAG?:
+            serviceType = ServiceType.SHOE_CLEANING
+            break
+        case .SHOE_POLISHING_TAG?:
+            serviceType = ServiceType.SHOE_POLISHING
+            break
+        case .LEATHER_TAG?:
+            serviceType = ServiceType.LEATHER
+            break
+        case .CURTAIN_TAG?:
+            serviceType = ServiceType.CURTAIN_WITH_DRYCLEANIG
+            break
+        case .CARPET_TAG?:
+            serviceType = ServiceType.CARPET
+            break
+        default:
+            print("No tag found")
+        }
+        
+        if sender.isSelected {
+            orderSummeryObject.selectedServiceTypes?.append(serviceType.rawValue)
+        }
+        else {
+            if let index = orderSummeryObject.selectedServiceTypes?.index(of: serviceType.rawValue) {
+                orderSummeryObject.selectedServiceTypes?.remove(at: index)
+            }
+        }
+    }
+    
+    private func handlingDryCleaning() {
+        
+        if dryCleaningBtn.isSelected {
+            if greenDCStackView == nil {
+                greenDCStackView = UIStackView()
+            }
+            
+            personalCareStackView.spacing = 0
+            
+            changePersonalCareMultiplier(with: 0.75)
+            
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                
+                self.loadWashStackView.isHidden = true
+                self.washIronStackView.isHidden = true
+                self.ironingStackView.isHidden = true
+                
+                self.greenDCStackView.isHidden = false
+                
+            }) { (success) in
+                
+            }
+        }
+        else {
+            personalCareStackView.spacing = 5
+            
+            changePersonalCareMultiplier(with: 0.96)
+            
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                
+                self.loadWashStackView.isHidden = false
+                self.washIronStackView.isHidden = false
+                self.ironingStackView.isHidden = false
+                
+                self.greenDCStackView.isHidden = true
+                
+            }) { (success) in
+                
+            }
+        }
+    }
+    
+    private func greenDCSelected() {
+        
+        dryCleaningBtn.isSelected = false
+        
+        if btnGreenDC.isSelected {
+            
+            personalCareStackView.spacing = 5
+            
+            changePersonalCareMultiplier(with: 0.96)
+            
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                
+                self.loadWashStackView.isHidden = false
+                self.washIronStackView.isHidden = false
+                self.ironingStackView.isHidden = false
+                
+                self.greenDCStackView.isHidden = true
+                
+            }) { (success) in
+                
+            }
+        }
+        else {
+            personalCareStackView.spacing = 5
+            
+            changePersonalCareMultiplier(with: 0.96)
+            
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                
+                self.loadWashStackView.isHidden = false
+                self.washIronStackView.isHidden = false
+                self.ironingStackView.isHidden = false
+                
+                self.greenDCStackView.isHidden = true
+                
+            }) { (success) in
+                
+            }
+        }
+    }
+    
+    @objc private func tappedOnPickupDatesView()
     {
         print("Tapped on pickup dates and timeslot stack view")
         
         guard let selectPickupDatesVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SelectPickupDatesViewController") as? SelectPickupDatesViewController else { return }
-        selectPickupDatesVC.addressModel = selectedPickupAddressModel
+        selectPickupDatesVC.orderSummeryObject = orderSummeryObject
         
         let navPickupVC = UINavigationController(rootViewController: selectPickupDatesVC)
         navPickupVC.isNavigationBarHidden = true
@@ -512,54 +809,45 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     
     func doneAfterAddressSelectionPressedWith(pickupAddressModel: AddressModel, deliveryAddressModel: AddressModel) {
         
-        selectedPickupAddressModel = pickupAddressModel
-        selectedDeliveryAddressModel = deliveryAddressModel
+        orderSummeryObject.selectedPickupAddressModel = pickupAddressModel
+        orderSummeryObject.selectedDeliveryAddressModel = deliveryAddressModel
         
         setupPickupAddress()
         
-        if selectedPickupAddressModel?._id == selectedDeliveryAddressModel?._id {
-           
-        }
-        else {
-            setupDeliveryAddress()
-        }
-        
         self.perform(#selector(changeTopGradientPosition), with: nil, afterDelay: 0.3)
-        
     }
     
-    @objc func changeTopGradientPosition() {
+    @objc private func changeTopGradientPosition() {
     
-        if selectedPickupAddressModel?._id == selectedDeliveryAddressModel?._id {
+        if orderSummeryObject.selectedPickupAddressModel?._id == orderSummeryObject.selectedDeliveryAddressModel?._id {
             let getPickupStackFrame = self.pickupAddressStackView.convert(self.pickupAddressStackView.bounds, to: self.view)
-            self.topGradientFromTopConstraint.constant = getPickupStackFrame.origin.y - AppDelegate.safeAreaTopInset()
-            self.topGradientHeightConstraint.constant = getPickupStackFrame.size.height * 2
+            self.topGradientFromTopConstraint.constant = getPickupStackFrame.origin.y
+            self.topGradientHeightConstraint.constant = getPickupStackFrame.size.height
             self.addressViewBottomConstraint.constant = -self.deliveryAddressStackView.frame.size.height
             self.perform(#selector(self.changeCustomMapViewFrame), with: nil, afterDelay: 0.3)
         }
         else {
             let getDeliveryStackFrame = deliveryAddressStackView.convert(deliveryAddressStackView.bounds, to: self.view)
-            self.topGradientFromTopConstraint.constant = getDeliveryStackFrame.origin.y - AppDelegate.safeAreaTopInset()
-            self.topGradientHeightConstraint.constant = getDeliveryStackFrame.size.height * 2
+            self.topGradientFromTopConstraint.constant = getDeliveryStackFrame.origin.y
+            self.topGradientHeightConstraint.constant = getDeliveryStackFrame.size.height
             self.addressViewBottomConstraint.constant = 0
             self.perform(#selector(self.changeCustomMapViewFrame), with: nil, afterDelay: 0.3)
         }
         
         self.perform(#selector(updateMapView), with: nil, afterDelay: 0.7)
-        
     }
     
-    @objc func updateMapView() {
+    @objc private func updateMapView() {
         customMapView.clearAllMarkers()
-        customMapView.showMultipleMarkersOnTheMap(with: selectedPickupAddressModel!)
-        customMapView.showMultipleMarkersOnTheMap(with: selectedDeliveryAddressModel!)
+        customMapView.showMultipleMarkersOnTheMap(with: orderSummeryObject.selectedPickupAddressModel!)
+        customMapView.showMultipleMarkersOnTheMap(with: orderSummeryObject.selectedDeliveryAddressModel!)
         customMapView.focusMapToShowAllMarkers()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
-        
+        dateTimeViewBottomSpace.constant = AppDelegate.safeAreaBottomInset()
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -577,107 +865,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         }
     }
     
-    @IBAction func btnDryCleaningPressed(_ sender: UIButton) {
-        
-        if !sender.isSelected {
-            
-            sender.isSelected = true
-            
-            greenDCTSTackView.axis = .vertical
-            //greenDCTSTackView.spacing = -4
-            greenDCTSTackView.alignment = .center
-            
-            if greenDCTSTackView.subviews.count == 0
-            {
-                let btnGreenDC = UIButton(type: .custom)
-                btnGreenDC.setImage(UIImage.init(named: "wash_iron"), for: .normal)
-                btnGreenDC.imageView!.contentMode = .scaleAspectFit
-                btnGreenDC.addTarget(self, action: #selector(btnGreenDCPressed(_:)), for: .touchUpInside)
-                btnGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 749), for: .vertical)
-                
-                let aspectRatioConstraint = NSLayoutConstraint(item: btnGreenDC, attribute: .height, relatedBy: .equal, toItem: btnGreenDC, attribute: .width, multiplier: (1.0 / 1.0),constant: 0)
-                btnGreenDC.addConstraint(aspectRatioConstraint)
-                
-                let lblGreenDC = UILabel()
-                let attrKeyIroning = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
-                let attrIroning = NSAttributedString(string: "Green DryCleaning".uppercased(), attributes: attrKeyIroning)
-                
-                lblGreenDC.attributedText = attrIroning
-                lblGreenDC.minimumScaleFactor = 0.5
-                
-                lblGreenDC.setContentCompressionResistancePriority(UILayoutPriority.init(rawValue: 751), for: .vertical)
-                lblGreenDC.setContentHuggingPriority(UILayoutPriority.init(rawValue: 1000), for: .vertical)
-                
-                greenDCTSTackView.addArrangedSubview(btnGreenDC)
-                greenDCTSTackView.addArrangedSubview(lblGreenDC)
-                
-                self.personalCareStackView.insertArrangedSubview(greenDCTSTackView, at: 2)
-                greenDCTSTackView.isHidden = true
-            }
-            
-            personalCareStackView.spacing = 0
-            
-            changePersonalCareMultiplier(with: 0.75)
-            
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
-                
-                self.loadWashStackView.isHidden = true
-                self.washIronStackView.isHidden = true
-                self.ironingStackView.isHidden = true
-                
-                self.greenDCTSTackView.isHidden = false
-                
-            }) { (success) in
-                
-            }
-        }
-        else {
-            
-            sender.isSelected = false
-            
-            personalCareStackView.spacing = 5
-            
-            changePersonalCareMultiplier(with: 0.96)
-            
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
-                
-                self.loadWashStackView.isHidden = false
-                self.washIronStackView.isHidden = false
-                self.ironingStackView.isHidden = false
-                
-                self.greenDCTSTackView.isHidden = true
-                
-            }) { (success) in
-                
-            }
-        }
-        
-        scrollViewServicesTitle.contentOffset.x =  (-view.frame.size.width * 0.17) + (scrollViewServices.contentOffset.x * 0.65)
-        
-    }
-    
-    @objc func btnGreenDCPressed(_ sender: UIButton) {
-        
-        dryCleaningBtn.isSelected = false
-        
-        personalCareStackView.spacing = 5
-        
-        changePersonalCareMultiplier(with: 0.96)
-        
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
-            
-            self.loadWashStackView.isHidden = false
-            self.washIronStackView.isHidden = false
-            self.ironingStackView.isHidden = false
-            
-            self.greenDCTSTackView.isHidden = true
-            
-        }) { (success) in
-            
-        }
-    }
-    
-    func changePersonalCareMultiplier(with multiplier:CGFloat) {
+    private func changePersonalCareMultiplier(with multiplier:CGFloat) {
         
         let newConstraint = self.personalCaremultiplier.constraintWithMultiplier(multiplier)
         self.view!.removeConstraint(self.personalCaremultiplier)
@@ -692,6 +880,34 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     }
 }
 
+extension MapViewController : GMSMapViewDelegate {
+    
+    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
+        
+        if gesture {
+            UIView.animate(withDuration: 0.2) {
+                self.locationPointer.alpha = 1
+            }
+        }
+    }
+    
+    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+        
+//        guard let model = orderSummeryObject.selectedPickupAddressModel else { return }
+//
+//        let latitude = Double(model.lat!)!
+//        let longitude = Double(model.lon!)!
+//
+//        let pos = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+//
+//        if position.target.latitude == pos.latitude {
+//            locationPointer.isHidden = true
+//        }
+//        else {
+//            locationPointer.isHidden = false
+//        }
+    }
+}
 
 extension NSLayoutConstraint {
     func constraintWithMultiplier(_ multiplier: CGFloat) -> NSLayoutConstraint {

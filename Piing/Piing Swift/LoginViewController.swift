@@ -12,32 +12,32 @@ import AVKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    let selectedBorderWidth = CGFloat(2)
-    let borderWidth = CGFloat(1.5)
-    let duration = 0.2
+    private let selectedBorderWidth = CGFloat(2)
+    private let borderWidth = CGFloat(1.5)
+    private let duration = 0.2
     
-    var emailString = ""
-    var passwordString = ""
+    private var emailString = ""
+    private var passwordString = ""
     
-    var passwordFirstCharacterAfterDidBeginEditing = false
+    private var passwordFirstCharacterAfterDidBeginEditing = false
     
-    @IBOutlet weak var gapOfLoginButtonFromBottom: NSLayoutConstraint!
+    @IBOutlet private weak var gapOfLoginButtonFromBottom: NSLayoutConstraint!
     
-    @IBOutlet weak var forgotPasswordButton: UIButton! {
+    @IBOutlet private weak var forgotPasswordButton: UIButton! {
         
         didSet {
             forgotPasswordButton.titleLabel?.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-4)
         }
     }
     
-    @IBOutlet weak var backButton: UIButton! {
+    @IBOutlet private weak var backButton: UIButton! {
         
         didSet {
             backButton.imageView?.contentMode = .scaleAspectFit
         }
     }
     
-    @IBOutlet weak var loginButton: UIButton! {
+    @IBOutlet private weak var loginButton: UIButton! {
         
         didSet {
             
@@ -48,17 +48,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @IBOutlet private weak var verticalSpaceBtwLoginAndEmail: NSLayoutConstraint!
+    @IBOutlet private weak var verticalSpaceBtwEmailAndPassword: NSLayoutConstraint!
     
-    @IBOutlet weak var verticalSpaceBtwLoginAndEmail: NSLayoutConstraint!
-    @IBOutlet weak var verticalSpaceBtwEmailAndPassword: NSLayoutConstraint!
-    
-    @IBOutlet weak var lblLogIn: UILabel! {
+    @IBOutlet private weak var lblLogIn: UILabel! {
         didSet {
             lblLogIn.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE+8)
         }
     }
     
-    @IBOutlet weak var emailTF: UITextField! {
+    @IBOutlet private weak var emailTF: UITextField! {
         
         didSet{
             self.emailTF.backgroundColor = .clear
@@ -73,7 +72,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBOutlet weak var passwordTF: UITextField! {
+    @IBOutlet private weak var passwordTF: UITextField! {
         
         didSet{
             self.passwordTF.backgroundColor = .clear
@@ -96,7 +95,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         guard let filePath = Bundle.main.path(forResource: "intra_video", ofType: "mp4") else { return }
         
@@ -144,7 +142,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self, name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     
-    @objc func addBottomLayerLineToTextFields() {
+    @objc private func addBottomLayerLineToTextFields() {
         
         let bottomLineForEmail = CALayer()
         bottomLineForEmail.borderWidth = borderWidth
@@ -164,7 +162,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.emailTF.becomeFirstResponder()
     }
     
-    @objc func keyboardWillChange(_ notif:Notification) {
+    @objc private func keyboardWillChange(_ notif:Notification) {
         
         guard let userInfo = notif.userInfo else { return }
         
@@ -240,7 +238,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @objc func removePreviousLayer(_ bottomLayer: CALayer) {
+    @objc private func removePreviousLayer(_ bottomLayer: CALayer) {
         
         bottomLayer.removeFromSuperlayer()
     }
@@ -339,7 +337,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    @IBAction func loginButtonPressed(_ sender: UIButton) {
+    @IBAction private func loginButtonPressed(_ sender: UIButton) {
         
         if AppDelegate.validateEmail(emailString, with: AppDelegate.VALIDATE_EMAILID)
         {
@@ -348,7 +346,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let dictPrams:[String:Any] = ["email" : emailString, "password" : passwordString]
             
             let loginService = WebServices.BASE_URL+WebServices.LOGIN_SERVICE
-            WebServices.serviceCall(withURLString: loginService, parameters: dictPrams, completionHandler: { (error, responseObject, data) in
+            
+            WebServices.serviceCall(withURLString: loginService, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+                
+                guard case self? = weakSelf else { return }
                 
                 guard let responseObject = responseObject else { return }
                 
@@ -369,10 +370,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         AppDelegate.constantDictValues["uid"] = loginData.uid
                         AppDelegate.constantDictValues["t"] = loginData.t
                         
-                        guard let homePageVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return }
-                        self.navigationController?.pushViewController(homePageVC, animated: true)
-                        
                         UserDefaults.standard.set(true, forKey: AppDelegate.IS_LOGIN_SUCCEDED)
+                        
+                        let appDel = UIApplication.shared.delegate as! AppDelegate
+                        appDel.getAddressFromServer()
                     }
                     else {
                         AppDelegate.showAlertViewWith(message: loginData.error!, title: "", actionTitle: "OK")
@@ -391,11 +392,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func forgotPasswordPressed(_ sender: UIButton) {
+    @IBAction private func forgotPasswordPressed(_ sender: UIButton) {
     }
     
     
-    @IBAction func backButtonPressed(_ sender: UIButton) {
+    @IBAction private func backButtonPressed(_ sender: UIButton) {
         
         emailTF.resignFirstResponder()
         passwordTF.resignFirstResponder()
@@ -409,13 +410,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
     // MARK: - Navigation
 

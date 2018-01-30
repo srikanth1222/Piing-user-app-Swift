@@ -16,14 +16,18 @@
 		E61364DB1FD16DAB0056058F /* AppFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DA1FD16DAB0056058F /* AppFont.swift */; };
 		E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DC1FD1A30B0056058F /* AppColors.swift */; };
 		E61960E41FFD340800EE1E8F /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */; };
+		E62217D7201A03C100B69565 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62217D6201A03C100B69565 /* TabBarController.swift */; };
 		E628DDF81FE147F300011CFE /* ShowAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */; };
 		E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */; };
 		E64D30151F5FEE3300F7734D /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = E64D30141F5FEE3300F7734D /* style.json */; };
 		E6572F721FDFD460008E4145 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6572F711FDFD460008E4145 /* Default-568h@2x.png */; };
+		E65C5E8A201745D100052416 /* DealsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65C5E89201745D100052416 /* DealsViewController.swift */; };
 		E671478F1FED1DAC00376D81 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E671478E1FED1DAC00376D81 /* LoginModel.swift */; };
 		E67272531FE1072F00E5F32C /* SummeryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67272521FE1072F00E5F32C /* SummeryViewController.swift */; };
 		E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6746EED1FD93CE00030815B /* DateModel.swift */; };
 		E68596DE1FE91FBB006EEF14 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68596DD1FE91FBB006EEF14 /* LoginViewController.swift */; };
+		E69FA1FC200F305500D31104 /* OrderSummeryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69FA1FB200F305500D31104 /* OrderSummeryModel.swift */; };
+		E69FA1FE200F50B600D31104 /* PaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69FA1FD200F50B600D31104 /* PaymentModel.swift */; };
 		E69FDEB71FD164DA00C171EC /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */; };
 		E69FDEB81FD164DA00C171EC /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA81FD164C900C171EC /* Lato-Black.ttf */; };
 		E69FDEB91FD164DA00C171EC /* Lato-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEA91FD164CA00C171EC /* Lato-Heavy.ttf */; };
@@ -54,6 +58,8 @@
 		E6BBFFA21FF222C800A6F31A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BBFFA01FF222C800A6F31A /* AVFoundation.framework */; };
 		E6BBFFA41FF2238900A6F31A /* intra_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E6BBFFA31FF2238800A6F31A /* intra_video.mp4 */; };
 		E6EC75461FD944B200D65116 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EC75451FD944B200D65116 /* ResponseModel.swift */; };
+		E6F22493201F143E00E1B8CF /* hexagon_gif.gif in Resources */ = {isa = PBXBuildFile; fileRef = E6F22492201F143C00E1B8CF /* hexagon_gif.gif */; };
+		E6F22495201F53DE00E1B8CF /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F22494201F53DE00E1B8CF /* EmptyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,14 +74,18 @@
 		E61364DA1FD16DAB0056058F /* AppFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFont.swift; sourceTree = "<group>"; };
 		E61364DC1FD1A30B0056058F /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		E62217D6201A03C100B69565 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowAddressViewController.swift; sourceTree = "<group>"; };
 		E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+CenterImageAndTitle.swift"; sourceTree = "<group>"; };
 		E64D30141F5FEE3300F7734D /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
 		E6572F711FDFD460008E4145 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		E65C5E89201745D100052416 /* DealsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealsViewController.swift; sourceTree = "<group>"; };
 		E671478E1FED1DAC00376D81 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		E67272521FE1072F00E5F32C /* SummeryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummeryViewController.swift; sourceTree = "<group>"; };
 		E6746EED1FD93CE00030815B /* DateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateModel.swift; sourceTree = "<group>"; };
 		E68596DD1FE91FBB006EEF14 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		E69FA1FB200F305500D31104 /* OrderSummeryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummeryModel.swift; sourceTree = "<group>"; };
+		E69FA1FD200F50B600D31104 /* PaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModel.swift; sourceTree = "<group>"; };
 		E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		E69FDEA81FD164C900C171EC /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
 		E69FDEA91FD164CA00C171EC /* Lato-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Heavy.ttf"; sourceTree = "<group>"; };
@@ -109,6 +119,8 @@
 		E6BBFFA01FF222C800A6F31A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E6BBFFA31FF2238800A6F31A /* intra_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = intra_video.mp4; sourceTree = "<group>"; };
 		E6EC75451FD944B200D65116 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
+		E6F22492201F143C00E1B8CF /* hexagon_gif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = hexagon_gif.gif; sourceTree = "<group>"; };
+		E6F22494201F53DE00E1B8CF /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +164,8 @@
 				E605D74F1FFC0392002285AF /* ValidPostalCodeModel.swift */,
 				E671478E1FED1DAC00376D81 /* LoginModel.swift */,
 				E6746EED1FD93CE00030815B /* DateModel.swift */,
+				E69FA1FD200F50B600D31104 /* PaymentModel.swift */,
+				E69FA1FB200F305500D31104 /* OrderSummeryModel.swift */,
 			);
 			path = "Model Classes";
 			sourceTree = "<group>";
@@ -205,12 +219,16 @@
 				E605D7511FFC04E3002285AF /* Model Classes */,
 				E61364DA1FD16DAB0056058F /* AppFont.swift */,
 				E61364DC1FD1A30B0056058F /* AppColors.swift */,
+				E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */,
 				E6B4558A1FD6861900ADC263 /* WebServices.swift */,
 				E6B354331F5E94E500C6B6FD /* AppDelegate.swift */,
 				E6A987501FF4E1A400D1CBFC /* CustomMapView.swift */,
+				E62217D6201A03C100B69565 /* TabBarController.swift */,
+				E6F22494201F53DE00E1B8CF /* EmptyViewController.swift */,
 				E60806D41FF7D19F00C6B480 /* WelcomeScreenViewController.swift */,
 				E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */,
 				E68596DD1FE91FBB006EEF14 /* LoginViewController.swift */,
+				E65C5E89201745D100052416 /* DealsViewController.swift */,
 				E6B354351F5E94E500C6B6FD /* MapViewController.swift */,
 				E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */,
 				E6B6D9F91FE3A2DA00689B24 /* SelectAddressViewController.swift */,
@@ -219,11 +237,11 @@
 				E60E99321FD56B58006F1A0F /* SelectPickupDatesViewController.swift */,
 				E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */,
 				E67272521FE1072F00E5F32C /* SummeryViewController.swift */,
-				E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */,
 				E6B354371F5E94E500C6B6FD /* Main.storyboard */,
 				E6B3543A1F5E94E500C6B6FD /* Assets.xcassets */,
 				E6B3543C1F5E94E500C6B6FD /* LaunchScreen.storyboard */,
 				E6B3543F1F5E94E500C6B6FD /* Info.plist */,
+				E6F22492201F143C00E1B8CF /* hexagon_gif.gif */,
 				E6BBFFA31FF2238800A6F31A /* intra_video.mp4 */,
 				E6B354451F5E9A9200C6B6FD /* PrefixHeader.pch */,
 				E64D30141F5FEE3300F7734D /* style.json */,
@@ -295,6 +313,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6F22493201F143E00E1B8CF /* hexagon_gif.gif in Resources */,
 				E69FDEB91FD164DA00C171EC /* Lato-Heavy.ttf in Resources */,
 				E69FDEC51FD164DA00C171EC /* Lato-Medium.ttf in Resources */,
 				E69FDEBB1FD164DA00C171EC /* Lato-Thin.ttf in Resources */,
@@ -331,12 +350,16 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Piing Swift/Pods-Piing Swift-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/DeckTransition/DeckTransition.framework",
 				"${BUILT_PRODUCTS_DIR}/KWVerificationCodeView/KWVerificationCodeView.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftGifOrigin/SwiftGifOrigin.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeckTransition.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KWVerificationCodeView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftGifOrigin.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -388,7 +411,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E628DDF81FE147F300011CFE /* ShowAddressViewController.swift in Sources */,
+				E62217D7201A03C100B69565 /* TabBarController.swift in Sources */,
 				E61364DB1FD16DAB0056058F /* AppFont.swift in Sources */,
+				E65C5E8A201745D100052416 /* DealsViewController.swift in Sources */,
 				E605D7501FFC0392002285AF /* ValidPostalCodeModel.swift in Sources */,
 				E6A987511FF4E1A400D1CBFC /* CustomMapView.swift in Sources */,
 				E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */,
@@ -399,6 +424,7 @@
 				E60806D31FF7A3FB00C6B480 /* AddAddressViewController.swift in Sources */,
 				E60E99331FD56B58006F1A0F /* SelectPickupDatesViewController.swift in Sources */,
 				E671478F1FED1DAC00376D81 /* LoginModel.swift in Sources */,
+				E69FA1FE200F50B600D31104 /* PaymentModel.swift in Sources */,
 				E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */,
 				E60E99351FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift in Sources */,
 				E61960E41FFD340800EE1E8F /* RegistrationViewController.swift in Sources */,
@@ -406,7 +432,9 @@
 				E6B6D9FC1FE3C28600689B24 /* AddressTableViewCell.swift in Sources */,
 				E6B4558B1FD6861900ADC263 /* WebServices.swift in Sources */,
 				E68596DE1FE91FBB006EEF14 /* LoginViewController.swift in Sources */,
+				E69FA1FC200F305500D31104 /* OrderSummeryModel.swift in Sources */,
 				E6EC75461FD944B200D65116 /* ResponseModel.swift in Sources */,
+				E6F22495201F53DE00E1B8CF /* EmptyViewController.swift in Sources */,
 				E6B354341F5E94E500C6B6FD /* AppDelegate.swift in Sources */,
 				E6B6D9FE1FE3FF8600689B24 /* AddressModel.swift in Sources */,
 			);
@@ -484,7 +512,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "55e2306b-1253-4951-b8a2-da7e0c72412d";
@@ -538,7 +566,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "55e2306b-1253-4951-b8a2-da7e0c72412d";
 				SDKROOT = iphoneos;
@@ -557,7 +585,7 @@
 				DEVELOPMENT_TEAM = PMQK439UXC;
 				GCC_PREFIX_HEADER = "Piing Swift/PrefixHeader.pch";
 				INFOPLIST_FILE = "Piing Swift/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.piing.userpiing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -578,7 +606,7 @@
 				DEVELOPMENT_TEAM = PMQK439UXC;
 				GCC_PREFIX_HEADER = "Piing Swift/PrefixHeader.pch";
 				INFOPLIST_FILE = "Piing Swift/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.piing.userpiing;
 				PRODUCT_NAME = "$(TARGET_NAME)";

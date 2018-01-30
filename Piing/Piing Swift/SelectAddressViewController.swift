@@ -22,7 +22,7 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
     
     weak var delegate: SelectAddressViewControllerDelegate?
     
-    @IBOutlet weak var addressView: UIView! {
+    @IBOutlet private weak var addressView: UIView! {
         didSet {
             addressView.layer.masksToBounds = false
             addressView.layer.shadowColor = UIColor.lightGray.cgColor
@@ -32,13 +32,13 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
         }
     }
     
-    @IBOutlet weak var tableViewAddress: UITableView!
+    @IBOutlet private weak var tableViewAddress: UITableView!
     
-    @IBOutlet weak var addressHeaderButton: UIButton!
-    @IBOutlet weak var addressName: UILabel!
-    @IBOutlet weak var addressDescription: UILabel!
+    @IBOutlet private weak var addressHeaderButton: UIButton!
+    @IBOutlet private weak var addressName: UILabel!
+    @IBOutlet private weak var addressDescription: UILabel!
     
-    @IBOutlet weak var doneButton: UIButton! {
+    @IBOutlet private weak var doneButton: UIButton! {
         didSet {
             // Set Done Button
             let attrKeyDone = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!, NSAttributedStringKey.kern: NSNumber(value: 2.0)]
@@ -51,8 +51,6 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
     var addressArray = [AddressModel]()
     
     var addressModel: AddressModel?
-    
-    
     
     var addressType = AddressType(rawValue: "PICKUP")
     
@@ -93,7 +91,7 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
         }
     }
     
-    func setupAddress() {
+    private func setupAddress() {
         
         guard let addressModel = addressModel else { return }
         
@@ -196,7 +194,7 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
         }
     }
     
-    var statusBarShouldBeHidden = false
+    private var statusBarShouldBeHidden = false
     
     override var prefersStatusBarHidden: Bool {
         return statusBarShouldBeHidden
@@ -206,7 +204,7 @@ class SelectAddressViewController: UIViewController,UITableViewDataSource, UITab
         return .slide
     }
     
-    @IBAction func doneButtonPressed(_ sender: UIButton) {
+    @IBAction private func doneButtonPressed(_ sender: UIButton) {
         
         self.delegate?.doneAfterAddressSelectionPressedWith(addressModel: self.addressModel!, addressType: self.addressType!)
         

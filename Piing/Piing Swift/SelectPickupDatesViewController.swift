@@ -7,29 +7,29 @@
 //
 
 import UIKit
-import Alamofire
 
 
 class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var centerView: UIView!
-    @IBOutlet weak var tableViewDates: UITableView!
-    @IBOutlet weak var tableViewTimeslots: UITableView!
+    @IBOutlet private weak var centerView: UIView!
+    @IBOutlet private weak var tableViewDates: UITableView!
+    @IBOutlet private weak var tableViewTimeslots: UITableView!
     
-    @IBOutlet weak var bottomDeliveryDateView: UIView!
-    @IBOutlet weak var deliveryDateTimeButton: UIButton! {
+    @IBOutlet private weak var bottomDeliveryDateView: UIView!
+    @IBOutlet private weak var deliveryDateTimeButton: UIButton! {
         didSet {
             deliveryDateTimeButton.imageView?.contentMode = .scaleAspectFit
         }
     }
     
-    var selectedDateRow:Int = 0
-    var selectedTimeslotRow:Int = -1
+    private var selectedDateRow:Int = 0
+    private var selectedTimeslotRow:Int = -1
     
-    var pickupDates = ResponseModel()
+    private var pickupDates = ResponseModel()
     
-    var addressModel: AddressModel?
+    var orderSummeryObject = OrderSummeryModel()
     
+    //var seelc
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,7 +50,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         tableViewTimeslots.backgroundColor = .white
         tableViewTimeslots.separatorStyle = .none
         
-        var dictPrams: [String:Any] = ["pickupAddressId" : addressModel?._id as Any, "serviceTypes" : "WI", "orderType" : "S"]
+        var dictPrams: [String:Any] = ["pickupAddressId" : orderSummeryObject.selectedPickupAddressModel?._id as Any, "serviceTypes" : "WI", "orderType" : "S"]
         
         for(key, value) in AppDelegate.constantDictValues {
             dictPrams[key] = value
@@ -58,7 +58,9 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         
         let URLString = WebServices.BASE_URL+WebServices.GET_PICKUP_DATES_AND_TIMESLOTS
         
-        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {(error, responseObject, data) in
+        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
             
             guard let responseObject = responseObject else { return }
             
@@ -88,20 +90,60 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                     
                     self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
                     
-                    
-                    guard let slots = dates[self.selectedDateRow].slots else { return }
-                    
-                    let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-                    
-                    let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
-                    
-                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
-                    
                     self.tableViewDates.reloadSections(IndexSet(integer: 0), with: .fade)
-                    self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
                     
-                    let indexPath = IndexPath(row: 0, section: 0)
-                    self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                    if self.orderSummeryObject.selectedPickupDate == nil {
+                        
+                        guard let slots = dates[self.selectedDateRow].slots else { return }
+                        
+                        let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                        
+                        let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                        
+                        self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                        
+                        self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+                        
+                        let dateModel = dates[0]
+                        let dateStr = dateModel.date
+                        
+                        self.orderSummeryObject.selectedPickupDate = dateStr
+                        
+                        let indexPath = IndexPath(row: 0, section: 0)
+                        self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                    }
+                    else {
+                        
+                        let dateStr = self.orderSummeryObject.selectedPickupDate
+                        let timeSlotStr = self.orderSummeryObject.selectedPickupTimeSlot
+                        
+                        if let dateRow = dates.index(where: { $0.date == dateStr }) {
+                            let indexPathDate = IndexPath(row: dateRow, section: 0)
+                            self.tableViewDates.selectRow(at: indexPathDate, animated: true, scrollPosition: .none)
+                            
+                            self.selectedDateRow = dateRow
+                            
+                            guard let slots = dates[self.selectedDateRow].slots else { return }
+                            
+                            if let timeSlotRow = slots.index(where: { $0.slot == timeSlotStr }) {
+                                
+                                self.selectedTimeslotRow = timeSlotRow
+                                
+                                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                                
+                                let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                                
+                                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                                
+                                self.tableViewTimeslots.reloadData()
+                            }
+                        }
+                        
+                        if let timeSlotRow = dates.index(where: { $0.date == dateStr }) {
+                            let indexPath = IndexPath(row: timeSlotRow, section: 0)
+                            self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                        }
+                    }
                 }
                 else if self.pickupDates.s == 100 {
                     AppDelegate.logoutFromTheApp()
@@ -119,6 +161,9 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -166,8 +211,8 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             guard let dateStr = dateModel.date else { return cell!}
             
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-mm-yyyy"
-            dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            //dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
             let date = dateFormatter.date(from: dateStr)
             
             dateFormatter.dateFormat = "dd MMM, EEE"
@@ -196,7 +241,7 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
                 lblTimeslot.tag = 1
                 lblTimeslot.textColor = .gray
                 //lblTimeslot.textAlignment = .center
-                lblTimeslot.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-2)
+                lblTimeslot.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
                 cell?.contentView.addSubview(lblTimeslot)
                 
                 let selectImageView = UIImageView()
@@ -246,42 +291,62 @@ class SelectPickupDatesViewController: UIViewController, UITableViewDelegate, UI
             tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             selectedDateRow = indexPath.row
             
-            selectedTimeslotRow = -1
+            let dateModel = self.pickupDates.dates![indexPath.row]
+            let dateStr = dateModel.date
             
-            guard let slots = self.pickupDates.dates?[selectedDateRow].slots else { return }
-            
-            let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-            
-            let customHeight = min(self.centerView.frame.size.height, height)
-            
-            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+            if orderSummeryObject.selectedPickupDate != dateStr {
                 
-                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                orderSummeryObject.selectedPickupDate = dateStr
+                orderSummeryObject.selectedPickupTimeSlot = nil
                 
-            }, completion: { (success) in
+                selectedTimeslotRow = -1
                 
-            })
-            
-            tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+                guard let slots = self.pickupDates.dates?[selectedDateRow].slots else { return }
+                
+                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                
+                let customHeight = min(self.centerView.frame.size.height, height)
+                
+                UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                    
+                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                    
+                }, completion: { (success) in
+                    
+                })
+                
+                tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+            }
         }
         else {
+            
+            let slotsModel = self.pickupDates.dates![selectedDateRow].slots![indexPath.row]
+            let slot = slotsModel.slot
             
             let previousIndexpath = IndexPath(row: selectedTimeslotRow, section: 0)
             
             selectedTimeslotRow = indexPath.row
             
+            orderSummeryObject.selectedPickupTimeSlot = slot
+            
             tableView.reloadRows(at: [previousIndexpath, indexPath], with: .fade)
         }
     }
     
-    @IBAction func deliveryDateTimeButtonPressed(_ sender: UIButton) {
+    @IBAction private func deliveryDateTimeButtonPressed(_ sender: UIButton) {
+        
+        if selectedTimeslotRow == -1 {
+            AppDelegate.showAlertViewWith(message: "Please select preferred pickup timeslot", title: "", actionTitle: "OK")
+            return
+        }
         
         guard let selectDeliveryDatesVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SelectDeliveryDatesViewController") as? SelectDeliveryDatesViewController else { return }
+        selectDeliveryDatesVC.orderSummeryObject = orderSummeryObject
         
         self.navigationController?.pushViewController(selectDeliveryDatesVC, animated: true)
     }
     
-    @IBAction func cancelButtonPressed(_ sender: Any) {
+    @IBAction private func cancelButtonPressed(_ sender: Any) {
         
         dismiss(animated: true, completion: nil)
     }

@@ -9,7 +9,7 @@
 import Foundation
 import GoogleMaps
 
-class CustomMapView: UIView {
+class CustomMapView: UIView, GMSMapViewDelegate {
     
     var mapView = GMSMapView()
     var markersArray = [GMSMarker]()
@@ -21,8 +21,7 @@ class CustomMapView: UIView {
         let camera = GMSCameraPosition.camera(withLatitude: AppDelegate.latitude, longitude: AppDelegate.longitude, zoom: 15.0, bearing: 270, viewingAngle: 0)
         
         mapView = GMSMapView.map(withFrame: CGRect(x: 0.0, y: 0.0, width: self.frame.size.width, height: self.frame.size.height), camera: camera)
-        mapView.autoresizingMask = .flexibleHeight
-                
+        
         do {
             // Set the map style by passing the URL of the local file.
             if let styleURL = Bundle.main.url(forResource: AppDelegate.MAP_STYLE, withExtension: AppDelegate.MAP_STYLE_TYPE) {
@@ -35,6 +34,20 @@ class CustomMapView: UIView {
         }
         
         self.addSubview(mapView)
+        
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.isMyLocationEnabled = true
+//        NSLayoutConstraint(item: mapView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: mapView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0).isActive = true
+//        NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0).isActive = true
+//
+                [
+                    mapView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
+                    mapView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+                    mapView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+                    mapView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
+                    ].forEach { ($0.isActive = true) }
         
     }
     

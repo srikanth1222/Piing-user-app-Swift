@@ -17,25 +17,22 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
     
     weak var delegate: ShowAddressViewControllerDelegate?
     
-    var customMapView: CustomMapView!
+    private var customMapView: CustomMapView!
     
-    @IBOutlet weak var pickupAddressStackView: UIStackView!
-    @IBOutlet weak var deliveryAddressStackView: UIStackView!
+    @IBOutlet private weak var pickupAddressStackView: UIStackView!
+    @IBOutlet private weak var deliveryAddressStackView: UIStackView!
     
-    @IBOutlet weak var pickupHeaderButton: UIButton!
-    @IBOutlet weak var pickupAddressName: UILabel!
-    @IBOutlet weak var pickupAddressDescription: UILabel!
+    @IBOutlet private weak var pickupHeaderButton: UIButton!
+    @IBOutlet private weak var pickupAddressName: UILabel!
+    @IBOutlet private weak var pickupAddressDescription: UILabel!
     
-    @IBOutlet weak var deliveryHeaderButton: UIButton!
-    @IBOutlet weak var deliveryAddressName: UILabel!
-    @IBOutlet weak var deliveryAddressDescription: UILabel!
+    @IBOutlet private weak var deliveryHeaderButton: UIButton!
+    @IBOutlet private weak var deliveryAddressName: UILabel!
+    @IBOutlet private weak var deliveryAddressDescription: UILabel!
     
-    @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet private weak var doneButton: UIButton!
     
-    var addressArray: [AddressModel]?
-    
-    var pickupAddressModel: AddressModel?
-    var deliveryAddressModel: AddressModel?
+    var orderSummeryObject = OrderSummeryModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,8 +69,8 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         deliveryHeaderButton.imageEdgeInsets = UIEdgeInsetsMake(deliveryHeaderButton.frame.size.height * 0.3, -5, deliveryHeaderButton.frame.size.height * 0.3, 0)
         deliveryHeaderButton.imageView?.contentMode = .scaleAspectFit
         
-        if deliveryAddressModel == nil {
-            deliveryAddressModel = pickupAddressModel
+        if orderSummeryObject.selectedDeliveryAddressModel == nil {
+            orderSummeryObject.selectedDeliveryAddressModel = orderSummeryObject.selectedPickupAddressModel
         }
         
         setupPickupAddress()
@@ -100,9 +97,9 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         customMapView.frame = CGRect(x: 0.0, y: deliveryAddressStackView.frame.maxY + AppDelegate.safeAreaTopInset() + view.frame.size.height * 0.02, width: self.view.frame.size.width, height: doneButton.frame.minY - (deliveryAddressStackView.frame.maxY + AppDelegate.safeAreaTopInset() + view.frame.size.height * 0.02))
     }
     
-    func setupPickupAddress() {
+    private func setupPickupAddress() {
         
-        guard let addressModel = pickupAddressModel else { return }
+        guard let addressModel = orderSummeryObject.selectedPickupAddressModel else { return }
         
         // Set Pickup Address Name
         let attrKeyPickupAddressName = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 0.6)]
@@ -120,9 +117,9 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         pickupAddressDescription.numberOfLines = 0
     }
     
-    func setupDeliveryAddress() {
+    private func setupDeliveryAddress() {
         
-        guard let addressModel = deliveryAddressModel else { return }
+        guard let addressModel = orderSummeryObject.selectedDeliveryAddressModel else { return }
         
         // Set Delivery Address Name
         let attrKeyDeliveryAddressName = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-5)!, NSAttributedStringKey.kern: NSNumber(value: 0.6)]
@@ -138,14 +135,14 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         deliveryAddressDescription.numberOfLines = 0
     }
     
-    @objc func tappedOnPickupAddressStackView() {
+    @objc private func tappedOnPickupAddressStackView() {
         
         print("Tapped on pickup address stack view")
         
         guard let selectAddressVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SelectAddressViewController") as? SelectAddressViewController else { return }
         selectAddressVC.addressType = .PICKUP
-        selectAddressVC.addressModel = pickupAddressModel
-        selectAddressVC.addressArray = addressArray!
+        selectAddressVC.addressModel = orderSummeryObject.selectedPickupAddressModel
+        selectAddressVC.addressArray = orderSummeryObject.addressArray!
         selectAddressVC.delegate = self
         
         let navSelectAddrVC = UINavigationController(rootViewController: selectAddressVC)
@@ -153,14 +150,14 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         present(navSelectAddrVC, animated: true, completion: nil)
     }
     
-    @objc func tappedOnDeliveryAddressStackView() {
+    @objc private func tappedOnDeliveryAddressStackView() {
         
         print("Tapped on delivery address stack view")
         
         guard let selectAddressVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SelectAddressViewController") as? SelectAddressViewController else { return }
         selectAddressVC.addressType = .DELIVERY
-        selectAddressVC.addressModel = deliveryAddressModel
-        selectAddressVC.addressArray = addressArray!
+        selectAddressVC.addressModel = orderSummeryObject.selectedDeliveryAddressModel
+        selectAddressVC.addressArray = orderSummeryObject.addressArray!
         selectAddressVC.delegate = self
         
         let navSelectAddrVC = UINavigationController(rootViewController: selectAddressVC)
@@ -168,9 +165,9 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         present(navSelectAddrVC, animated: true, completion: nil)
     }
     
-    @IBAction func doneButtonPressed(_ sender: UIButton) {
+    @IBAction private func doneButtonPressed(_ sender: UIButton) {
         
-        delegate?.doneAfterAddressSelectionPressedWith(pickupAddressModel: pickupAddressModel!, deliveryAddressModel: deliveryAddressModel!)
+        delegate?.doneAfterAddressSelectionPressedWith(pickupAddressModel: orderSummeryObject.selectedPickupAddressModel!, deliveryAddressModel: orderSummeryObject.selectedDeliveryAddressModel!)
         
         dismiss(animated: true, completion: nil)
     }
@@ -178,11 +175,11 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
     func doneAfterAddressSelectionPressedWith(addressModel: AddressModel, addressType: AddressType) {
         
         if addressType.rawValue == "PICKUP" {
-            pickupAddressModel = addressModel
+            orderSummeryObject.selectedPickupAddressModel = addressModel
             setupPickupAddress()
         }
         else if addressType.rawValue == "DELIVERY" {
-            deliveryAddressModel = addressModel
+            orderSummeryObject.selectedDeliveryAddressModel = addressModel
             setupDeliveryAddress()
         }
         else {
@@ -192,10 +189,10 @@ class ShowAddressViewController: UIViewController, SelectAddressViewControllerDe
         self.perform(#selector(updateMapView), with: nil, afterDelay: 0.7)
     }
     
-    @objc func updateMapView() {
+    @objc private func updateMapView() {
         customMapView.clearAllMarkers()
-        customMapView.showMultipleMarkersOnTheMap(with: pickupAddressModel!)
-        customMapView.showMultipleMarkersOnTheMap(with: deliveryAddressModel!)
+        customMapView.showMultipleMarkersOnTheMap(with: orderSummeryObject.selectedPickupAddressModel!)
+        customMapView.showMultipleMarkersOnTheMap(with: orderSummeryObject.selectedDeliveryAddressModel!)
         customMapView.focusMapToShowAllMarkers()
     }
     

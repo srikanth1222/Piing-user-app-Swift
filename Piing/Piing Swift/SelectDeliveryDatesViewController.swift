@@ -10,18 +10,22 @@ import UIKit
 
 class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var centerView: UIView!
-    @IBOutlet weak var tableViewDates: UITableView!
-    @IBOutlet weak var tableViewTimeslots: UITableView!
+    @IBOutlet private weak var centerView: UIView!
+    @IBOutlet private weak var tableViewDates: UITableView!
+    @IBOutlet private weak var tableViewTimeslots: UITableView!
     
-    @IBOutlet weak var pickupDateTimeslotButton: UIButton!
-    @IBOutlet weak var summeryButton: UIButton!
+    @IBOutlet private weak var pickupDateTimeslotButton: UIButton!
+    @IBOutlet private weak var summeryButton: UIButton!
     
     
-    var selectedDateRow:Int = 0
-    var selectedTimeslotRow:Int = -1
+    private var selectedDateRow:Int = 0
+    private var selectedTimeslotRow:Int = -1
     
-    var deliveryDates = ResponseModel()
+    private var deliveryDates = ResponseModel()
+    
+    //var selectedPickupDate
+    
+    var orderSummeryObject = OrderSummeryModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +39,18 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         tableViewTimeslots.backgroundColor = .white
         tableViewTimeslots.separatorStyle = .none
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        //dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
+        let date = dateFormatter.date(from: orderSummeryObject.selectedPickupDate!)
+        
+        dateFormatter.dateFormat = "dd MMM"
+        let formattedPickupDateStr = dateFormatter.string(from: date!)
+        
+        let combinedPickupDateAndTime = "PICKUP " + formattedPickupDateStr + ", " + orderSummeryObject.selectedPickupTimeSlot!
+        
         let attrKeyPickup = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-4)!, NSAttributedStringKey.kern: NSNumber(value: 0.5)]
-        let attrPickup = NSAttributedString(string: "PICKUP 25 APR, 9 PM-10 PM", attributes: attrKeyPickup)
+        let attrPickup = NSAttributedString(string: combinedPickupDateAndTime.uppercased(), attributes: attrKeyPickup)
         
         // Set Pickup Date Timeslot
         pickupDateTimeslotButton.setAttributedTitle(attrPickup, for: .normal)
@@ -54,15 +68,17 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         summeryButton.imageEdgeInsets = UIEdgeInsetsMake(AppDelegate.SCREEN_WIDTH * 0.045, 0, AppDelegate.SCREEN_WIDTH * 0.045, -AppDelegate.SCREEN_WIDTH * 0.03)
         summeryButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -AppDelegate.SCREEN_WIDTH * 0.07)
         
-        var dictPrams: [String:Any] = ["pickupAddressId" : "20334", "serviceTypes" : "WI", "orderType" : "S"]
+        var dictPrams: [String : Any] = ["deliveryAddressId" : orderSummeryObject.selectedDeliveryAddressModel?._id as Any, "serviceTypes" : "WI", "orderType" : "S", "pickUpDate" : orderSummeryObject.selectedPickupDate as Any, "pickUpSlotId" : orderSummeryObject.selectedPickupTimeSlot as Any, "orderSpeed" : "R"]
         
         for(key, value) in AppDelegate.constantDictValues {
             dictPrams[key] = value
         }
         
-        let URLString = WebServices.BASE_URL+WebServices.GET_PICKUP_DATES_AND_TIMESLOTS
+        let URLString = WebServices.BASE_URL+WebServices.GET_DELIVERY_DATES_AND_TIMESLOTS
         
-        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {(error, responseObject, data) in
+        WebServices.serviceCall(withURLString: URLString, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
             
             guard let responseObject = responseObject else { return }
             
@@ -73,8 +89,6 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             do {
                 
                 self.deliveryDates = try JSONDecoder().decode(ResponseModel.self, from: data)
-                
-                //print(self.pickupDates)
                 
                 if self.deliveryDates.s == 1 {
                     
@@ -87,9 +101,6 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
                     self.tableViewDates.rowHeight = self.tableViewDates.frame.height * 0.11
                     self.tableViewTimeslots.rowHeight = self.tableViewTimeslots.frame.height * 0.1
                     
-                    self.tableViewDates.reloadData()
-                    self.tableViewTimeslots.reloadData()
-                    
                     guard let dates = self.deliveryDates.dates else { return }
                     
                     let heightDate = CGFloat(dates.count) * self.tableViewDates.rowHeight
@@ -98,19 +109,61 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
                     
                     self.tableViewDates.frame = CGRect(x: self.tableViewDates.frame.origin.x, y: self.centerView.frame.size.height/2-customHeightDate/2, width: self.tableViewDates.frame.size.width, height: customHeightDate)
                     
+                    self.tableViewDates.reloadSections(IndexSet(integer: 0), with: .fade)
                     
+                    if self.orderSummeryObject.selectedDeliveryDate == nil {
+                        
+                        guard let slots = dates[self.selectedDateRow].slots else { return }
+                        
+                        let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                        
+                        let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                        
+                        self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                        
+                        self.tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+                        
+                        let dateModel = dates[0]
+                        let dateStr = dateModel.date
+                        
+                        self.orderSummeryObject.selectedDeliveryDate = dateStr
+                        
+                        let indexPath = IndexPath(row: 0, section: 0)
+                        self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                    }
+                    else {
+                        
+                        let dateStr = self.orderSummeryObject.selectedDeliveryDate
+                        let timeSlotStr = self.orderSummeryObject.selectedDeliveryTimeSlot
+                        
+                        if let dateRow = dates.index(where: { $0.date == dateStr }) {
+                            let indexPathDate = IndexPath(row: dateRow, section: 0)
+                            self.tableViewDates.selectRow(at: indexPathDate, animated: true, scrollPosition: .none)
+                            
+                            self.selectedDateRow = dateRow
+                            
+                            guard let slots = dates[self.selectedDateRow].slots else { return }
+                            
+                            if let timeSlotRow = slots.index(where: { $0.slot == timeSlotStr }) {
+                                
+                                self.selectedTimeslotRow = timeSlotRow
+                                
+                                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                                
+                                let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
+                                
+                                self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                                
+                                self.tableViewTimeslots.reloadData()
+                            }
+                        }
+                        
+                        if let timeSlotRow = dates.index(where: { $0.date == dateStr }) {
+                            let indexPath = IndexPath(row: timeSlotRow, section: 0)
+                            self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                        }
+                    }
                     
-                    guard let slots = dates[self.selectedDateRow].slots else { return }
-                    
-                    let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-                    
-                    let customHeight = min(self.tableViewTimeslots.frame.size.height, height)
-                    
-                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
-                    
-                    
-                    let indexPath = IndexPath(row: 0, section: 0)
-                    self.tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
                 }
                 else if self.deliveryDates.s == 100 {
                     AppDelegate.logoutFromTheApp()
@@ -127,7 +180,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         })
     }
     
-    @objc func tappedOnBottomDatesView() {
+    @objc private func tappedOnBottomDatesView() {
         
         print("Tapped on Bottom Delivery date View")
         
@@ -192,8 +245,8 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             guard let dateStr = dateModel.date else { return cell!}
             
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-mm-yyyy"
-            dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            //dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
             let date = dateFormatter.date(from: dateStr)
             
             dateFormatter.dateFormat = "dd MMM, EEE"
@@ -218,7 +271,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
             
             lblDate.text = newDateStr
             
-            if dateModel.dis == 0 {
+            if dateModel.dis != 0 {
                 discountImageView.image = UIImage.init(named: "discount_off_icon")
                 priceIncreaseIcon.setImage(UIImage.init(named: "price_increase_2_times_icon"), for: .normal)
                 
@@ -260,7 +313,7 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
                 lblTimeslot.tag = 1
                 lblTimeslot.textColor = .gray
                 //lblTimeslot.textAlignment = .center
-                lblTimeslot.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-2)
+                lblTimeslot.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-3)
                 cell?.contentView.addSubview(lblTimeslot)
                 
                 let selectImageView = UIImageView()
@@ -307,43 +360,83 @@ class SelectDeliveryDatesViewController: UIViewController, UITableViewDelegate, 
         
         if tableView == tableViewDates {
             
+            tableViewDates.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             selectedDateRow = indexPath.row
             
-            selectedTimeslotRow = -1
+            let dateModel = self.deliveryDates.dates![indexPath.row]
+            let dateStr = dateModel.date
             
-            guard let slots = self.deliveryDates.dates?[selectedDateRow].slots else { return }
-            
-            let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
-            
-            let customHeight = min(self.centerView.frame.size.height, height)
-            
-            self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
-            
-            tableViewTimeslots.reloadData()
+            if orderSummeryObject.selectedDeliveryDate != dateStr {
+                
+                orderSummeryObject.selectedDeliveryDate = dateStr
+                orderSummeryObject.selectedDeliveryTimeSlot = nil
+                
+                selectedTimeslotRow = -1
+                
+                guard let slots = self.deliveryDates.dates?[selectedDateRow].slots else { return }
+                
+                let height = CGFloat(slots.count) * self.tableViewTimeslots.rowHeight
+                
+                let customHeight = min(self.centerView.frame.size.height, height)
+                
+                UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                    
+                    self.tableViewTimeslots.frame = CGRect(x: self.tableViewTimeslots.frame.origin.x, y: self.centerView.frame.size.height/2-customHeight/2, width: self.tableViewTimeslots.frame.size.width, height: customHeight)
+                    
+                }, completion: { (success) in
+                    
+                })
+                
+                tableViewTimeslots.reloadSections(IndexSet(integer: 0), with: .fade)
+            }
         }
         else {
+           
+            let slotsModel = self.deliveryDates.dates![selectedDateRow].slots![indexPath.row]
+            let slot = slotsModel.slot
+            
+            let previousIndexpath = IndexPath(row: selectedTimeslotRow, section: 0)
             
             selectedTimeslotRow = indexPath.row
             
-            tableView.reloadData()
+            orderSummeryObject.selectedDeliveryTimeSlot = slot
+            
+            tableView.reloadRows(at: [previousIndexpath, indexPath], with: .fade)
         }
     }
     
-    
-    @IBAction func pickupDateTimeslotButtonPressed(_ sender: UIButton) {
+    @IBAction private func pickupDateTimeslotButtonPressed(_ sender: UIButton) {
         
         navigationController?.popViewController(animated: true)
     }
     
-    
-    @IBAction func summeryButtonPressed(_ sender: UIButton) {
+    @IBAction private func summeryButtonPressed(_ sender: UIButton) {
         
+        if selectedTimeslotRow != -1 {
+            
+            if orderSummeryObject.isSummeryLoaded {
+                
+                let summeryVC = self.presentingViewController as? SummeryViewController
+                summeryVC?.orderSummeryObject = orderSummeryObject
+                
+                self.presentingViewController?.dismiss(animated: true, completion: nil)
+            }
+            else {
+                orderSummeryObject.isSummeryLoaded = true
+                guard let summeryVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "SummeryViewController") as? SummeryViewController else { return }
+                summeryVC.orderSummeryObject = orderSummeryObject
+                
+                present(summeryVC, animated: true, completion: nil)
+            }
+        }
+        else {
+            AppDelegate.showAlertViewWith(message: "Please select preferred delivery timeslot", title: "", actionTitle: "OK")
+        }
     }
     
-    
-    @IBAction func cancelButtonPressed(_ sender: Any) {
+    @IBAction private func cancelButtonPressed(_ sender: Any) {
         
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.viewControllers[0].dismiss(animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

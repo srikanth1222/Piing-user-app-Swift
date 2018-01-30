@@ -79,7 +79,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public static func safeAreaTopInset() -> CGFloat {
         
         if #available(iOS 11.0, *) {
-            return UIApplication.shared.keyWindow!.safeAreaInsets.top
+            
+            guard let keyWindow = UIApplication.shared.keyWindow else { return 0 }
+            return keyWindow.safeAreaInsets.top
         }
         else {
            return 0
@@ -89,7 +91,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public static func safeAreaBottomInset() -> CGFloat {
         
         if #available(iOS 11.0, *) {
-            return UIApplication.shared.keyWindow!.safeAreaInsets.bottom
+            guard let keyWindow = UIApplication.shared.keyWindow else { return 0 }
+            return keyWindow.safeAreaInsets.bottom
         }
         else {
             return 0
@@ -99,7 +102,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public static func safeAreaLeftInset() -> CGFloat {
         
         if #available(iOS 11.0, *) {
-            return UIApplication.shared.keyWindow!.safeAreaInsets.left
+            guard let keyWindow = UIApplication.shared.keyWindow else { return 0 }
+            return keyWindow.safeAreaInsets.left
         }
         else {
             return 0
@@ -109,7 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public static func safeAreaRightInset() -> CGFloat {
         
         if #available(iOS 11.0, *) {
-            return UIApplication.shared.keyWindow!.safeAreaInsets.right
+            guard let keyWindow = UIApplication.shared.keyWindow else { return 0 }
+            return keyWindow.safeAreaInsets.right
         }
         else {
             return 0
@@ -193,21 +198,103 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 AppDelegate.constantDictValues["t"] = UserDefaults.standard.object(forKey: "token")
             }
             
-            guard let homePageVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return true }
+            guard let emptyVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "EmptyViewController") as? EmptyViewController else { return true }
+            window?.rootViewController = emptyVC
             
-            let navVC = UINavigationController(rootViewController: homePageVC)
-            navVC.isNavigationBarHidden = true
-            
-            window?.rootViewController = navVC
+            getAddressFromServer()
         }
         else {
             
+            guard let navLoginVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "NavWelcomeScreenViewController") as? UINavigationController else { return true }
             
+            window?.rootViewController = navLoginVC
         }
         
         return true
     }
-
+    
+    public static var orderSummeryObject = OrderSummeryModel()
+    
+    func getAddressFromServer() {
+        let addressURLString = WebServices.BASE_URL+WebServices.GET_ADDRESS
+        
+        WebServices.serviceCall(withURLString: addressURLString, parameters: AppDelegate.constantDictValues, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
+            
+            guard let responseObject = responseObject else { return }
+            
+            print (responseObject)
+            
+            guard let data = data else { return }
+            
+            do {
+                
+                let responseObject = try JSONDecoder().decode(ResponseModel.self, from: data)
+                
+                print (responseObject as Any)
+                
+                if responseObject.s == 100 {
+                    AppDelegate.logoutFromTheApp()
+                    return
+                }
+                else if responseObject.s == 1 {
+                    
+                    AppDelegate.orderSummeryObject.addressArray = responseObject.addresses
+                    self.getPaymentFromServer()
+                }
+                else {
+                    
+                }
+                
+            }  catch let jsonDecodeErr {
+                
+                print("Error while parsing addresses: \(jsonDecodeErr)")
+            }
+        })
+    }
+    
+    func getPaymentFromServer() {
+        let paymentURLString = WebServices.BASE_URL+WebServices.GET_PAYMENT
+        
+        WebServices.serviceCall(withURLString: paymentURLString, parameters: AppDelegate.constantDictValues, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+            
+            guard case self? = weakSelf else { return }
+            
+            guard let responseObject = responseObject else { return }
+            
+            print (responseObject)
+            
+            guard let data = data else { return }
+            
+            do {
+                
+                let responseObject = try JSONDecoder().decode(ResponseModel.self, from: data)
+                
+                print (responseObject as Any)
+                
+                if responseObject.s == 100 {
+                    AppDelegate.logoutFromTheApp()
+                    return
+                }
+                else if responseObject.s == 1 {
+                    AppDelegate.orderSummeryObject.paymentData = responseObject.paymentMethod
+                    
+                    guard let tabBarVC = AppDelegate.MAIN_STORYBOARD.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController else { return }
+                    self.window?.rootViewController = tabBarVC
+                }
+                else {
+                    
+                }
+                
+            }  catch let jsonDecodeErr {
+                
+                print("Error while parsing addresses: \(jsonDecodeErr)")
+            }
+        })
+    }
+    
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
