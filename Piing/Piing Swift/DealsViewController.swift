@@ -30,6 +30,9 @@ class DealsViewController: UIViewController {
     
     @IBOutlet weak var backgroundViewTopConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var tableViewDeals: UITableView!
+    @IBOutlet weak var tableViewBottomSpaceConstraint: NSLayoutConstraint!
+    
     private lazy var bottomOffset: CGFloat = {
         let bottomOffset = self.mapVC.containerViewAvailableTime.frame.size.height + tabBar.frame.size.height
         return bottomOffset
@@ -86,7 +89,14 @@ class DealsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableViewDeals.separatorStyle = .none
+        
+        tableViewDeals.estimatedRowHeight = 250
+        tableViewDeals.rowHeight = UITableViewAutomaticDimension
+        
         openHomePageController()
+        
+        tableViewBottomSpaceConstraint.constant = self.mapVC.containerViewAvailableTime.frame.size.height
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -419,3 +429,55 @@ class DealsViewController: UIViewController {
     */
 
 }
+
+
+extension DealsViewController : UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cellId = "DEAL CELL"
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! DealTableViewCell
+        cell.selectionStyle = .none
+        
+        cell.lblDealTitle.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)
+        
+        if indexPath.row == 0 {
+            cell.dealImageView.image = UIImage.init(named: "deals_bg1")
+        }
+        else if indexPath.row == 1 {
+            cell.dealImageView.image = UIImage.init(named: "deals_bg2")
+            cell.lblDealTitle.text = "50% CASH BACK ON SHOES"
+        }
+        else if indexPath.row == 2 {
+            cell.dealImageView.image = UIImage.init(named: "deals_bg3")
+        }
+        
+        cell.lblDealTitle.numberOfLines = 0
+        
+        let attrKeyPO = [NSAttributedStringKey.foregroundColor : AppColors.blueColor, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        let attrPO = NSAttributedString(string: "PLACE ORDER".uppercased(), attributes: attrKeyPO)
+        
+        cell.buttonPlaceOrder.setAttributedTitle(attrPO, for: .normal)
+        cell.buttonPlaceOrder.layer.cornerRadius = 12
+        
+        cell.dealView.clipsToBounds = true
+        cell.dealView.layer.cornerRadius = 12
+        cell.dealView.backgroundColor = .white
+        
+        cell.dealView.layer.shadowColor = UIColor.gray.cgColor
+        cell.dealView.layer.shadowOffset = CGSize(width: 1.0, height: 5.0)
+        cell.dealView.layer.shadowOpacity = 0.5
+        cell.dealView.layer.shadowRadius = 5.0
+        cell.dealView.layer.masksToBounds = false
+        
+//        let shadowPath = UIBezierPath(roundedRect: cell.dealView.bounds, cornerRadius: 12)
+//        cell.dealView.layer.shadowPath = shadowPath.cgPath
+        
+        return cell
+    }
+}
+

@@ -18,9 +18,9 @@ class TabBarController: UITabBarController {
         //UITabBar.appearance().tintColor = UIColor.darkGray
         UITabBar.appearance().unselectedItemTintColor = UIColor.darkGray
         
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: 10)!, NSAttributedStringKey.foregroundColor : AppColors.blueColor], for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : UIFont(name: AppFont.CALIBRI_BOLD, size: 10)!, NSAttributedStringKey.foregroundColor : AppColors.blueColor], for: .selected)
         
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: 10)!, NSAttributedStringKey.foregroundColor : UIColor.darkGray], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : UIFont(name: AppFont.CALIBRI_BOLD, size: 10)!, NSAttributedStringKey.foregroundColor : UIColor.darkGray], for: .normal)
         
         let tabBarItems = self.tabBar.items!
         
@@ -31,7 +31,7 @@ class TabBarController: UITabBarController {
             tabBarItem.image = UIImage(named: tabBarImages_inActive[tabBarItems.index(of: tabBarItem)!])?.withRenderingMode(.alwaysOriginal)
             tabBarItem.selectedImage = UIImage(named: tabBarImages_active[tabBarItems.index(of: tabBarItem)!])?.withRenderingMode(.alwaysOriginal)
             
-            tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -4)
+            tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -5)
         }
     }
     

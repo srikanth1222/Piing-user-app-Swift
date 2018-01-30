@@ -17,6 +17,9 @@
 		E61364DD1FD1A30B0056058F /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61364DC1FD1A30B0056058F /* AppColors.swift */; };
 		E61960E41FFD340800EE1E8F /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */; };
 		E62217D7201A03C100B69565 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62217D6201A03C100B69565 /* TabBarController.swift */; };
+		E62415542020879B002568C3 /* Calibri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E624155220208794002568C3 /* Calibri-Bold.ttf */; };
+		E62415552020879B002568C3 /* Calibri.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E624155320208797002568C3 /* Calibri.ttf */; };
+		E624155820208E91002568C3 /* DealTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E624155720208E91002568C3 /* DealTableViewCell.swift */; };
 		E628DDF81FE147F300011CFE /* ShowAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */; };
 		E6458D371FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */; };
 		E64D30151F5FEE3300F7734D /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = E64D30141F5FEE3300F7734D /* style.json */; };
@@ -75,6 +78,9 @@
 		E61364DC1FD1A30B0056058F /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		E62217D6201A03C100B69565 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		E624155220208794002568C3 /* Calibri-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Calibri-Bold.ttf"; sourceTree = "<group>"; };
+		E624155320208797002568C3 /* Calibri.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Calibri.ttf; sourceTree = "<group>"; };
+		E624155720208E91002568C3 /* DealTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealTableViewCell.swift; sourceTree = "<group>"; };
 		E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowAddressViewController.swift; sourceTree = "<group>"; };
 		E6458D361FA8ACC3001DC211 /* UIButton+CenterImageAndTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+CenterImageAndTitle.swift"; sourceTree = "<group>"; };
 		E64D30141F5FEE3300F7734D /* style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
@@ -170,9 +176,20 @@
 			path = "Model Classes";
 			sourceTree = "<group>";
 		};
+		E624155620208E65002568C3 /* Table Cell */ = {
+			isa = PBXGroup;
+			children = (
+				E6B6D9FB1FE3C28600689B24 /* AddressTableViewCell.swift */,
+				E624155720208E91002568C3 /* DealTableViewCell.swift */,
+			);
+			path = "Table Cell";
+			sourceTree = "<group>";
+		};
 		E69FDEA61FD1648200C171EC /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				E624155220208794002568C3 /* Calibri-Bold.ttf */,
+				E624155320208797002568C3 /* Calibri.ttf */,
 				E69FDEA81FD164C900C171EC /* Lato-Black.ttf */,
 				E69FDEB31FD164D500C171EC /* Lato-BlackItalic.ttf */,
 				E69FDEA71FD164C800C171EC /* Lato-Bold.ttf */,
@@ -215,6 +232,7 @@
 		E6B354321F5E94E500C6B6FD /* Piing Swift */ = {
 			isa = PBXGroup;
 			children = (
+				E624155620208E65002568C3 /* Table Cell */,
 				E69FDEA61FD1648200C171EC /* Fonts */,
 				E605D7511FFC04E3002285AF /* Model Classes */,
 				E61364DA1FD16DAB0056058F /* AppFont.swift */,
@@ -233,7 +251,6 @@
 				E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */,
 				E6B6D9F91FE3A2DA00689B24 /* SelectAddressViewController.swift */,
 				E60806D21FF7A3FB00C6B480 /* AddAddressViewController.swift */,
-				E6B6D9FB1FE3C28600689B24 /* AddressTableViewCell.swift */,
 				E60E99321FD56B58006F1A0F /* SelectPickupDatesViewController.swift */,
 				E60E99341FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift */,
 				E67272521FE1072F00E5F32C /* SummeryViewController.swift */,
@@ -313,9 +330,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E62415542020879B002568C3 /* Calibri-Bold.ttf in Resources */,
 				E6F22493201F143E00E1B8CF /* hexagon_gif.gif in Resources */,
 				E69FDEB91FD164DA00C171EC /* Lato-Heavy.ttf in Resources */,
 				E69FDEC51FD164DA00C171EC /* Lato-Medium.ttf in Resources */,
+				E62415552020879B002568C3 /* Calibri.ttf in Resources */,
 				E69FDEBB1FD164DA00C171EC /* Lato-Thin.ttf in Resources */,
 				E69FDEBF1FD164DA00C171EC /* Lato-Italic.ttf in Resources */,
 				E6B3543E1F5E94E500C6B6FD /* LaunchScreen.storyboard in Resources */,
@@ -437,6 +456,7 @@
 				E6F22495201F53DE00E1B8CF /* EmptyViewController.swift in Sources */,
 				E6B354341F5E94E500C6B6FD /* AppDelegate.swift in Sources */,
 				E6B6D9FE1FE3FF8600689B24 /* AddressModel.swift in Sources */,
+				E624155820208E91002568C3 /* DealTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -163,21 +163,6 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         }
     }
     
-    func setupDateTimeLabel(_ time: String) {
-        let strPickupDate = "PICKUP DATE : TIME"
-        let strPickupTime = "\nNEXT PICKUP 3 - 4 PM"
-        
-        let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!]
-        let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!]
-        
-        let attrPickupDate = NSMutableAttributedString(string: strPickupDate, attributes: attrKeyPickupDate)
-        let attrPickupTime = NSMutableAttributedString(string: strPickupTime, attributes: attrKeyPickupTime)
-        
-        attrPickupDate.append(attrPickupTime)
-        
-        pickupDateAndTimeButton.setAttributedTitle(attrPickupDate, for: .normal)
-    }
-    
     @IBOutlet private weak var dateTimeView: UIView! {
         
         didSet {
@@ -286,7 +271,7 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
         setupUI()
         //self.perform(#selector(self.setupUI), with: nil, afterDelay: 1.5)
         
-        //checkBookingAvailable()
+        checkBookingAvailable()
     }
     
     func checkBookingAvailable() {
@@ -313,11 +298,17 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
     }
     
     func getNextAvailableTimeslot() {
-        let bookingAvailableURL = WebServices.BASE_URL+WebServices.GET_ETA
+        let etaURL = WebServices.BASE_URL+WebServices.GET_ETA
         
+        let versionNumber = Bundle.main.infoDictionary!["CFBundleShortVersionString"]!
         
+        var dictPrams: [String:Any] = ["pickupAddressId" : orderSummeryObject.selectedPickupAddressModel?._id as Any, "serviceTypes" : "WF", "orderType" : "S", "ver" : versionNumber]
         
-        WebServices.serviceCall(withURLString: bookingAvailableURL, parameters: AppDelegate.constantDictValues, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
+        for(key, value) in AppDelegate.constantDictValues {
+            dictPrams[key] = value
+        }
+        
+        WebServices.serviceCall(withURLString: etaURL, parameters: dictPrams, completionHandler: {[weak weakSelf = self] (error, responseObject, data) in
             
             guard case self? = weakSelf else { return }
             
@@ -325,15 +316,30 @@ class MapViewController: UIViewController, UIScrollViewDelegate, ShowAddressView
             
             print (responseObject)
             
-            let bookingResponse = responseObject as! Dictionary<String, Any>
+            let etaResponse = responseObject as! Dictionary<String, Any>
             
-            let dict1 = bookingResponse["order"] as! Dictionary<String, Any>
-            
-            if dict1["bookNow"] as! Bool == true {
-                
-                self.getNextAvailableTimeslot()
+            if etaResponse["s"] as! Bool {
+                self.setupDateTimeLabel(etaResponse["slot"] as! String)
+            }
+            else {
+                self.setupDateTimeLabel("")
             }
         })
+    }
+    
+    func setupDateTimeLabel(_ time: String) {
+        let strPickupDate = "PICKUP DATE : TIME"
+        let strPickupTime = "\nNEXT PICKUP " + time
+        
+        let attrKeyPickupDate = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE)!]
+        let attrKeyPickupTime = [NSAttributedStringKey.foregroundColor : UIColor.lightGray, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-5)!]
+        
+        let attrPickupDate = NSMutableAttributedString(string: strPickupDate, attributes: attrKeyPickupDate)
+        let attrPickupTime = NSMutableAttributedString(string: strPickupTime, attributes: attrKeyPickupTime)
+        
+        attrPickupDate.append(attrPickupTime)
+        
+        pickupDateAndTimeButton.setAttributedTitle(attrPickupDate, for: .normal)
     }
     
     override func viewDidLayoutSubviews() {

@@ -26,4 +26,7 @@ struct AppFont {
     public static let APPFONT_SEMIBOLD_ITALIC:String = "Lato-SemiboldItalic"
     public static let APPFONT_THIN:String = "Lato-Thin"
     public static let APPFONT_THIN_ITALIC:String = "Lato-ThinItalic"
+    
+    public static let CALIBRI_REGULAR:String = "Calibri"
+    public static let CALIBRI_BOLD:String = "Calibri-Bold"
 }

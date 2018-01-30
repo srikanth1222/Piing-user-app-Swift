@@ -18,7 +18,7 @@ class CustomMapView: UIView, GMSMapViewDelegate {
         
         super.init(frame: frame)
         
-        let camera = GMSCameraPosition.camera(withLatitude: AppDelegate.latitude, longitude: AppDelegate.longitude, zoom: 15.0, bearing: 270, viewingAngle: 0)
+        let camera = GMSCameraPosition.camera(withLatitude: AppDelegate.latitude, longitude: AppDelegate.longitude, zoom: 16.0, bearing: 270, viewingAngle: 0)
         
         mapView = GMSMapView.map(withFrame: CGRect(x: 0.0, y: 0.0, width: self.frame.size.width, height: self.frame.size.height), camera: camera)
         
@@ -57,7 +57,7 @@ class CustomMapView: UIView, GMSMapViewDelegate {
     
     @objc func animateMapView() {
         
-        mapView.animate(toZoom: 15)
+        mapView.animate(toZoom: 16)
         
         //        let target = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
         //
