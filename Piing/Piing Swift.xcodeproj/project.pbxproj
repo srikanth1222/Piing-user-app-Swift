@@ -48,6 +48,7 @@
 		E69FDEC51FD164DA00C171EC /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEB51FD164D700C171EC /* Lato-Medium.ttf */; };
 		E69FDEC61FD164DA00C171EC /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E69FDEB61FD164D900C171EC /* Lato-Light.ttf */; };
 		E6A987511FF4E1A400D1CBFC /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A987501FF4E1A400D1CBFC /* CustomMapView.swift */; };
+		E6AC18DA202827E7002CC2EE /* DealDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AC18D9202827E7002CC2EE /* DealDetailsViewController.swift */; };
 		E6B354341F5E94E500C6B6FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B354331F5E94E500C6B6FD /* AppDelegate.swift */; };
 		E6B354361F5E94E500C6B6FD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B354351F5E94E500C6B6FD /* MapViewController.swift */; };
 		E6B354391F5E94E500C6B6FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6B354371F5E94E500C6B6FD /* Main.storyboard */; };
@@ -109,6 +110,7 @@
 		E69FDEB51FD164D700C171EC /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
 		E69FDEB61FD164D900C171EC /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 		E6A987501FF4E1A400D1CBFC /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
+		E6AC18D9202827E7002CC2EE /* DealDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealDetailsViewController.swift; sourceTree = "<group>"; };
 		E6B354301F5E94E500C6B6FD /* Piing Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Piing Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6B354331F5E94E500C6B6FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E6B354351F5E94E500C6B6FD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 				E61960E31FFD340800EE1E8F /* RegistrationViewController.swift */,
 				E68596DD1FE91FBB006EEF14 /* LoginViewController.swift */,
 				E65C5E89201745D100052416 /* DealsViewController.swift */,
+				E6AC18D9202827E7002CC2EE /* DealDetailsViewController.swift */,
 				E6B354351F5E94E500C6B6FD /* MapViewController.swift */,
 				E628DDF71FE147F300011CFE /* ShowAddressViewController.swift */,
 				E6B6D9F91FE3A2DA00689B24 /* SelectAddressViewController.swift */,
@@ -447,6 +450,7 @@
 				E6746EEE1FD93CE00030815B /* DateModel.swift in Sources */,
 				E60E99351FD56CA7006F1A0F /* SelectDeliveryDatesViewController.swift in Sources */,
 				E61960E41FFD340800EE1E8F /* RegistrationViewController.swift in Sources */,
+				E6AC18DA202827E7002CC2EE /* DealDetailsViewController.swift in Sources */,
 				E60806D51FF7D19F00C6B480 /* WelcomeScreenViewController.swift in Sources */,
 				E6B6D9FC1FE3C28600689B24 /* AddressTableViewCell.swift in Sources */,
 				E6B4558B1FD6861900ADC263 /* WebServices.swift in Sources */,

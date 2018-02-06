@@ -13,6 +13,7 @@ class DealTableViewCell: UITableViewCell {
     @IBOutlet weak var dealView: UIView!
     @IBOutlet weak var dealImageView: UIImageView!
     @IBOutlet weak var lblDealTitle: UILabel!
+    @IBOutlet weak var lblDealDesc: UILabel!
     @IBOutlet weak var buttonPlaceOrder: UIButton!
     
     

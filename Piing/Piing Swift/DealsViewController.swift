@@ -68,7 +68,14 @@ class DealsViewController: UIViewController {
     
     @IBOutlet weak var backgroundView: UIView!
     
-    @IBOutlet weak var lblDeals: UILabel!
+    @IBOutlet weak var lblDeals: UILabel! {
+        didSet {
+            let attrKeyDeals = [NSAttributedStringKey.foregroundColor : UIColor.black, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE+8)!, NSAttributedStringKey.kern: NSNumber(value: 1.5)]
+            let attrDeals = NSAttributedString(string: "Deals", attributes: attrKeyDeals)
+            
+            lblDeals.attributedText = attrDeals
+        }
+    }
     
     var mapVC = MapViewController()
     var homePageBottomConstraint = NSLayoutConstraint()
@@ -91,8 +98,8 @@ class DealsViewController: UIViewController {
         
         tableViewDeals.separatorStyle = .none
         
-        tableViewDeals.estimatedRowHeight = 250
-        tableViewDeals.rowHeight = UITableViewAutomaticDimension
+//        tableViewDeals.estimatedRowHeight = 250
+//        tableViewDeals.rowHeight = UITableViewAutomaticDimension
         
         openHomePageController()
         
@@ -434,7 +441,11 @@ class DealsViewController: UIViewController {
 extension DealsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return view.frame.size.width * 0.6
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -443,41 +454,158 @@ extension DealsViewController : UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! DealTableViewCell
         cell.selectionStyle = .none
         
-        cell.lblDealTitle.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-7)
-        
         if indexPath.row == 0 {
             cell.dealImageView.image = UIImage.init(named: "deals_bg1")
+            cell.lblDealTitle.text = "50% OFF"
+            cell.lblDealDesc.text = "On bag & shoe cleaning"
+            
+            cell.lblDealTitle.textColor = AppColors.RGBColor(r: 77, g: 77, b: 77, a: 1.0)
+            cell.lblDealDesc.textColor = AppColors.RGBColor(r: 77, g: 77, b: 77, a: 1.0)
         }
         else if indexPath.row == 1 {
             cell.dealImageView.image = UIImage.init(named: "deals_bg2")
-            cell.lblDealTitle.text = "50% CASH BACK ON SHOES"
+            cell.lblDealTitle.text = "30% OFF"
+            cell.lblDealDesc.text = "First shoe order"
+            
+            cell.lblDealTitle.textColor = .white
+            cell.lblDealDesc.textColor = .white
         }
         else if indexPath.row == 2 {
             cell.dealImageView.image = UIImage.init(named: "deals_bg3")
         }
         
-        cell.lblDealTitle.numberOfLines = 0
+        cell.lblDealTitle.font = UIFont.init(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE+3)
+        cell.lblDealDesc.font = UIFont.init(name: AppFont.APPFONT_BOLD, size: AppDelegate.GLOBAL_FONT_SIZE-5)
         
-        let attrKeyPO = [NSAttributedStringKey.foregroundColor : AppColors.blueColor, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_HEAVY, size: AppDelegate.GLOBAL_FONT_SIZE-7)!, NSAttributedStringKey.kern: NSNumber(value: 0.7)]
+        
+        let attrKeyPO = [NSAttributedStringKey.foregroundColor : AppColors.blueColor, NSAttributedStringKey.font : UIFont(name: AppFont.APPFONT_BLACK, size: AppDelegate.GLOBAL_FONT_SIZE-8)!, NSAttributedStringKey.kern: NSNumber(value: 0.4)]
         let attrPO = NSAttributedString(string: "PLACE ORDER".uppercased(), attributes: attrKeyPO)
         
         cell.buttonPlaceOrder.setAttributedTitle(attrPO, for: .normal)
-        cell.buttonPlaceOrder.layer.cornerRadius = 12
+        cell.buttonPlaceOrder.layer.cornerRadius = cell.buttonPlaceOrder.frame.size.width * 0.15
+        
+        
+//        cell.dealView.clipsToBounds = true
+//        cell.dealView.layer.cornerRadius = 30
+//
+//        let shadowSize : CGFloat = 4.0
+//        let shadowPath = UIBezierPath(rect: CGRect(x: -shadowSize / 2,
+//                                                   y: -shadowSize / 2,
+//                                                   width: cell.dealView.frame.size.width + shadowSize,
+//                                                   height: cell.dealView.frame.size.height + shadowSize))
+//
+////        let shadowPath = UIBezierPath(roundedRect: CGRect(x: -shadowSize / 2,
+////                                                          y: -shadowSize / 2,
+////                                                          width: cell.dealView.frame.size.width + shadowSize,
+////                                                          height: cell.dealView.frame.size.height + shadowSize), byRoundingCorners: UIRectCorner.allCorners, cornerRadii: CGSize(width: 5, height: 5))
+//        cell.dealView.layer.shadowColor = UIColor.gray.cgColor
+//        cell.dealView.layer.shadowOffset = CGSize(width: 2.0, height: 0.0)
+//        cell.dealView.layer.shadowOpacity = 0.5
+//        cell.dealView.layer.shadowRadius = 3.0
+//        cell.dealView.layer.shadowPath = shadowPath.cgPath
+//        cell.dealView.layer.masksToBounds = false
+        
+//        cell.dealView.clipsToBounds = true
+//        cell.dealView.dropShadow(color: .gray, opacity: 0.5, offSet: CGSize(width: -2, height: -5), radius: 5.0, scale: true)
+//        cell.dealView.layer.cornerRadius = 12
+        
+        
+        
+//        cell.dealView.layer.shadowPath = UIBezierPath(roundedRect: cell.dealView.bounds, cornerRadius: 20).cgPath
+//        cell.dealView.layer.shadowColor = UIColor.gray.cgColor
+//        cell.dealView.layer.shadowOpacity = 0.5
+//        cell.dealView.layer.shadowOffset = CGSize(width: -10, height: -20)
+//        cell.dealView.layer.shadowRadius = 1
+//        cell.dealView.layer.masksToBounds = false
+//        cell.dealView.layer.cornerRadius = 20
+        
+        
         
         cell.dealView.clipsToBounds = true
-        cell.dealView.layer.cornerRadius = 12
+        cell.dealView.layer.cornerRadius = 20
         cell.dealView.backgroundColor = .white
         
         cell.dealView.layer.shadowColor = UIColor.gray.cgColor
-        cell.dealView.layer.shadowOffset = CGSize(width: 1.0, height: 5.0)
-        cell.dealView.layer.shadowOpacity = 0.5
-        cell.dealView.layer.shadowRadius = 5.0
+        cell.dealView.layer.shadowOffset = CGSize(width: -1.0, height: -1.0)
+        cell.dealView.layer.shadowOpacity = 0.7
+        cell.dealView.layer.shadowRadius = 5
         cell.dealView.layer.masksToBounds = false
         
-//        let shadowPath = UIBezierPath(roundedRect: cell.dealView.bounds, cornerRadius: 12)
-//        cell.dealView.layer.shadowPath = shadowPath.cgPath
+        let shadowPath = UIBezierPath(roundedRect: cell.dealView.bounds, cornerRadius: 20)
+        cell.dealView.layer.shadowPath = shadowPath.cgPath
         
         return cell
     }
 }
+
+//
+//extension CALayer {
+//    func addShadow() {
+//        self.shadowOffset = .zero
+//        self.shadowOpacity = 0.2
+//        self.shadowRadius = 10
+//        self.shadowColor = UIColor.black.cgColor
+//        self.masksToBounds = false
+//        if cornerRadius != 0 {
+//            addShadowWithRoundedCorners()
+//        }
+//    }
+//    func roundCorners(radius: CGFloat) {
+//        self.cornerRadius = radius
+//        if shadowOpacity != 0 {
+//            addShadowWithRoundedCorners()
+//        }
+//    }
+//
+//    private func addShadowWithRoundedCorners() {
+//        if let contents = self.contents {
+//            masksToBounds = false
+//            sublayers?.filter{ $0.frame.equalTo(self.bounds) }
+//                .forEach{ $0.roundCorners(radius: self.cornerRadius) }
+//            self.contents = nil
+//            if let sublayer = sublayers?.first,
+//                sublayer.name == "shadow" {
+//
+//                sublayer.removeFromSuperlayer()
+//            }
+//
+//            let contentLayer = CALayer()
+//            contentLayer.name = "shadow"
+//            contentLayer.contents = contents
+//            contentLayer.frame = bounds
+//            contentLayer.cornerRadius = cornerRadius
+//            contentLayer.masksToBounds = true
+//            insertSublayer(contentLayer, at: 0)
+//        }
+//    }
+//}
+//
+//extension UIView {
+//
+//    // OUTPUT 1
+//    func dropShadow(scale: Bool = true) {
+//        self.layer.masksToBounds = false
+//        self.layer.shadowColor = UIColor.black.cgColor
+//        self.layer.shadowOpacity = 0.5
+//        self.layer.shadowOffset = CGSize(width: -1, height: 1)
+//        self.layer.shadowRadius = 1
+//
+//        self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+//        self.layer.shouldRasterize = true
+//        self.layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+//    }
+//
+//    // OUTPUT 2
+//    func dropShadow(color: UIColor, opacity: Float = 0.5, offSet: CGSize, radius: CGFloat = 1, scale: Bool = true) {
+//        self.layer.masksToBounds = false
+//        self.layer.shadowColor = color.cgColor
+//        self.layer.shadowOpacity = opacity
+//        self.layer.shadowOffset = offSet
+//        self.layer.shadowRadius = radius
+//
+//        self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+//        self.layer.shouldRasterize = true
+//        self.layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+//    }
+//}
 
